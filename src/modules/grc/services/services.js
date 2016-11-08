@@ -82,7 +82,8 @@ var ContactServicesInterface = new function () {
             GET_ALL_CONTACT_TYPES: 'alltypes',
             INSERT: 'insert',
             UPDATE: 'update',
-            DELETE: 'delete'
+            DELETE: 'delete',
+            UPDATE_CATEGORY: 'upcat'
         }
     };
 
@@ -124,8 +125,8 @@ var ContactServicesInterface = new function () {
                 role: role,
                 notes: notes,
                 origin: origin,
-                errorFlag : errorFlag,
-                nextCallDate : nextCallDate,
+                errorFlag: errorFlag,
+                nextCallDate: nextCallDate,
                 prospected: prospected
             },
             successHandler);
@@ -147,12 +148,23 @@ var ContactServicesInterface = new function () {
                 role: role,
                 notes: notes,
                 origin: origin,
-                errorFlag : errorFlag,
-                nextCallDate : null,
+                errorFlag: errorFlag,
+                nextCallDate: null,
                 prospected: prospected
             },
             successHandler);
     };
+
+    this.updateCategory = function (id, category, successHandler) {
+        return DoleticServicesInterface.callService(
+            this.meta.OBJECT, this.meta.ACTION.UPDATE_CATEGORY,
+            {
+                id: id,
+                category: category
+            },
+            successHandler);
+    };
+
     this.delete = function (id, successHandler) {
         return DoleticServicesInterface.callService(
             this.meta.OBJECT, this.meta.ACTION.DELETE,

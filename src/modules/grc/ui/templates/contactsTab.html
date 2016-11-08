@@ -41,7 +41,7 @@
             </div>
         </div>
         <div class="fields">
-            <div class="six wide required field" id="contact_gender_field">
+            <div class="four wide required field" id="contact_gender_field">
                 <label>Civilité</label>
                 <div id="contact_gender_search" class="ui fluid search selection dropdown">
                     <input type="hidden" id="contact_gender"/>
@@ -52,7 +52,7 @@
                     </div>
                 </div>
             </div>
-            <div class="ten wide required field" id="contact_type_field">
+            <div class="four wide required field" id="contact_type_field">
                 <label>Type de contact</label>
                 <div id="contact_type_search" class="ui fluid search selection dropdown">
                     <input type="hidden" id="contact_type"/>
@@ -62,6 +62,10 @@
                         <!-- CONTACT TYPES WILL GO HERE -->
                     </div>
                 </div>
+            </div>
+            <div id="contact_email_field" class="eight wide field">
+                <label>Mail</label>
+                <input id="contact_mail" placeholder="Mail..." type="text"/>
             </div>
         </div>
         <div class="fields">
@@ -91,9 +95,44 @@
                 <input id="contact_role" placeholder="Role..." type="text"/>
             </div>
         </div>
-        <div id="contact_email_field" class="sixteen wide field">
-            <label>Mail</label>
-            <input id="contact_mail" placeholder="Mail..." type="text"/>
+        <div id="contact_origin_field" class="sixteen wide field">
+            <label>Origine des coordonnées</label>
+            <input id="contact_origin" placeholder="Origine..." type="text"/>
+        </div>
+        <div class="fields">
+            <div id="sdatei_field" class="eight wide field">
+                <label>Prochaine prospection</label>
+                <div class="ui calendar" id="contact_nextCallDate_field">
+                    <div class="ui input left icon">
+                        <i class="calendar icon"></i>
+                        <input id="sdatei_nextCalldate" placeholder="AAAA-mm-jj" type="text"/>
+                    </div>
+                </div>
+            </div>
+            <div class="four wide required field" id="contact_prospected_field">
+                <label>Issu de la prospection</label>
+                <div id="contact_prospected_search" class="ui fluid search selection dropdown">
+                    <input type="hidden" id="contact_prospected"/>
+                    <i class="dropdown icon"></i>
+                    <div class="default text">Prospecté ?</div>
+                    <div class="menu">
+                        <div class="item" data-value="1">Oui</div>
+                        <div class="item" data-value="0">Non</div>
+                    </div>
+                </div>
+            </div>
+            <div class="four wide required field" id="contact_error_field">
+                <label>Etat des coordonnées</label>
+                <div id="contact_error_search" class="ui fluid search selection dropdown">
+                    <input type="hidden" id="contact_error"/>
+                    <i class="dropdown icon"></i>
+                    <div class="default text">Etat...</div>
+                    <div class="menu">
+                        <div class="item" data-value="-1">Correctes</div>
+                        <div class="item" data-value="1">Erronées</div>
+                    </div>
+                </div>
+            </div>
         </div>
         <div id="contact_notes_field" class="sixteen wide field">
             <label>Notes</label>

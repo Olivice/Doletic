@@ -275,6 +275,7 @@ class ContactServices extends AbstractObjectServices
     const INSERT = "insert";
     const UPDATE = "update";
     const DELETE = "delete";
+    const UPDATE_CATEGORY = "upcat";
 
     const FORCE_INSERT = "forins";
 
@@ -350,6 +351,10 @@ class ContactServices extends AbstractObjectServices
                 $params[ContactServices::PARAM_ERROR_FLAG],
                 $params[ContactServices::PARAM_NEXT_CALL_DATE],
                 $params[ContactServices::PARAM_PROSPECTED]);
+        } else if (!strcmp($action, ContactServices::UPDATE_CATEGORY)) {
+            $data = $this->__update_contact_category(
+                $params[ContactServices::PARAM_ID],
+                $params[ContactServices::PARAM_CATEGORY]);
         } else if (!strcmp($action, ContactServices::DELETE)) {
             $data = $this->__delete_contact($params[ContactServices::PARAM_ID]);
         }
@@ -590,6 +595,29 @@ class ContactServices extends AbstractObjectServices
                 ContactDBObject::COL_CATEGORY,
                 ContactDBObject::COL_ROLE,
                 ContactDBObject::COL_NOTES,
+                ContactDBObject::COL_ORIGIN,
+                ContactDBObject::COL_ERROR_FLAG,
+                ContactDBObject::COL_NEXT_CALL_DATE,
+                ContactDBObject::COL_PROSPECTED,
+                ContactDBObject::COL_LAST_UPDATE
+            )
+        );
+        // execute query
+        return parent::getDBConnection()->PrepareExecuteQuery($sql, $sql_params);
+    }
+
+    private function __update_contact_category($id, $category)
+    {
+        // create sql params
+        $sql_params = array(
+            ":" . ContactDBObject::COL_ID => $id,
+            ":" . ContactDBObject::COL_CATEGORY => $category,
+            ":" . ContactDBObject::COL_LAST_UPDATE => date('Y-m-d H:i:s'),
+        );
+        // sql request
+        $sql = parent::getDBObject()->GetTable(ContactDBObject::TABL_CONTACT)->GetUPDATEQuery(
+            array(
+                ContactDBObject::COL_CATEGORY,
                 ContactDBObject::COL_LAST_UPDATE
             )
         );

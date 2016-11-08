@@ -152,10 +152,10 @@ var DoleticMasterInterface = new function () {
 
     this.nightMode = function (on) {
         if (on) {
-            $('#left_menu').attr('class', 'ui vertical sticky menu fixed top inverted');
+            $('#left_menu').attr('class', 'ui menu fixed inverted');
             $('#body').attr('style', 'background-color:#505050;');
         } else {
-            $('#left_menu').attr('class', 'ui vertical sticky menu fixed top');
+            $('#left_menu').attr('class', 'ui menu fixed');
             $('#body').attr('style', 'background-color:#FFFFFF;');
         }
     };
