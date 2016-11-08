@@ -313,7 +313,7 @@ var DoleticUIModule = new function () {
                     content += '<div class="item" data-value="' + data.object[i] + '">' + data.object[i] + '</div>';
                 }
                 // insert html content
-                $('#gender_search .menu').html(content);
+                $('#contact_gender_search .menu').html(content);
             } else {
                 // use default service service error handler
                 DoleticServicesInterface.handleServiceError(data);
@@ -394,7 +394,7 @@ var DoleticUIModule = new function () {
                 }
                 content += "</tbody></table>";
                 $('#company_table_container').append(content);
-                $('#firm_search .menu').html(selector_content);
+                $('#contact_firm_search .menu').html(selector_content);
                 DoleticMasterInterface.makeDataTables('company_table', filters);
                 if (fillContact) {
                     DoleticUIModule.fillContactList();
