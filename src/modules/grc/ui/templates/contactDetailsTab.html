@@ -1,0 +1,102 @@
+<div class="ui grid container">
+    <div class="row">
+        <div class="sixteen wide column">
+            <div class="ui buttons">
+                <div id="edituser_modal_btn" class="ui green button" onClick="DoleticUIModule.editUser(-1, -1);">
+                    Modifier le contact
+                </div>
+                <div id="disableuser_btn" class="ui red button" onClick="DoleticUIModule.disableUser(-1, -1);">
+                    Supprimer le contact
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="four wide column">
+            <div class="ui horizontal divider">
+                Profil du Client
+            </div>
+            <div class="ui relaxed divided list">
+                <div class="item">
+                    <div class="content">
+                        <div class="header">Nom complet</div>
+                        <div class="description" id="det_cont_name">undefined</div>
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="content">
+                        <div class="header">Email</div>
+                        <div class="description" id="det_cont_email">undefined</div>
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="content">
+                        <div class="header">Téléphone</div>
+                        <div class="description" id="det_cont_phone">undefined</div>
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="content">
+                        <div class="header">Téléphone mobile</div>
+                        <div class="description" id="det_cont_cellphone">undefined</div>
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="content">
+                        <div class="header">Entreprise</div>
+                        <div class="description" id="det_cont_firm">undefined</div>
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="content">
+                        <div class="header">Poste</div>
+                        <div class="description" id="det_cont_role">undefined</div>
+                    </div>
+                </div>
+            </div>
+            <div class="ui horizontal divider">
+                Infos de Gestion
+            </div>
+            <div class="ui relaxed divided list">
+                <div class="item">
+                    <div class="content">
+                        <div class="header">Origine des coordonnées</div>
+                        <div class="description" id="det_cont_origin">undefined</div>
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="content">
+                        <div class="header">Notes complémentaires</div>
+                        <div class="description" id="det_cont_notes">undefined</div>
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="content">
+                        <div class="header">Issu de la prospection ?</div>
+                        <div class="description" id="det_cont_prospected">undefined</div>
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="content">
+                        <div class="header">Etat des coordonnées</div>
+                        <div class="description" id="det_cont_error">undefined</div>
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="content">
+                        <div class="header">Prochaine prospection</div>
+                        <div class="description" id="det_cont_next_call_date">undefined</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="twelve wide column">
+            <div class="ui horizontal divider">
+                Historique des appels
+            </div>
+            <div class="row" id="call_table_container">
+                <i>Prochainement disponible ...</i>
+            </div>
+        </div>
+    </div>
+</div>

@@ -77,6 +77,7 @@ var ContactServicesInterface = new function () {
         // --- (actions)
         ACTION: {
             GET_CONTACT_BY_ID: 'byid',
+            GET_CONTACTS_BY_CATEGORY: 'bycategory',
             GET_ALL_CONTACTS: 'all',
             GET_ALL_CONTACT_TYPES: 'alltypes',
             INSERT: 'insert',
@@ -99,7 +100,16 @@ var ContactServicesInterface = new function () {
             {id: id},
             successHandler);
     };
-    this.insert = function (gender, firstname, lastname, firmId, email, phone, cellphone, category, role, notes, successHandler) {
+
+    this.getByCategory = function (category, successHandler) {
+        return DoleticServicesInterface.callService(
+            this.meta.OBJECT, this.meta.ACTION.GET_CONTACTS_BY_CATEGORY,
+            {category: category},
+            successHandler);
+    };
+
+    this.insert = function (gender, firstname, lastname, firmId, email, phone, cellphone, category, role, notes,
+                            origin, errorFlag, nextCallDate, prospected, successHandler) {
         return DoleticServicesInterface.callService(
             this.meta.OBJECT, this.meta.ACTION.INSERT,
             {
@@ -112,11 +122,16 @@ var ContactServicesInterface = new function () {
                 cellphone: cellphone,
                 category: category,
                 role: role,
-                notes: notes
+                notes: notes,
+                origin: origin,
+                errorFlag : errorFlag,
+                nextCallDate : nextCallDate,
+                prospected: prospected
             },
             successHandler);
     };
-    this.update = function (id, gender, firstname, lastname, firmId, email, phone, cellphone, category, role, notes, successHandler) {
+    this.update = function (id, gender, firstname, lastname, firmId, email, phone, cellphone, category, role, notes,
+                            origin, errorFlag, prospected, successHandler) {
         return DoleticServicesInterface.callService(
             this.meta.OBJECT, this.meta.ACTION.UPDATE,
             {
@@ -130,7 +145,11 @@ var ContactServicesInterface = new function () {
                 cellphone: cellphone,
                 category: category,
                 role: role,
-                notes: notes
+                notes: notes,
+                origin: origin,
+                errorFlag : errorFlag,
+                nextCallDate : null,
+                prospected: prospected
             },
             successHandler);
     };
