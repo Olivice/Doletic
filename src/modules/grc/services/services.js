@@ -110,7 +110,7 @@ var ContactServicesInterface = new function () {
     };
 
     this.insert = function (gender, firstname, lastname, firmId, email, phone, cellphone, category, role, notes,
-                            origin, errorFlag, nextCallDate, prospected, successHandler) {
+                            origin, errorFlag, nextCallDate, prospected, assignedTo, successHandler) {
         return DoleticServicesInterface.callService(
             this.meta.OBJECT, this.meta.ACTION.INSERT,
             {
@@ -127,12 +127,14 @@ var ContactServicesInterface = new function () {
                 origin: origin,
                 errorFlag: errorFlag,
                 nextCallDate: nextCallDate,
-                prospected: prospected
+                prospected: prospected,
+                assignedTo: assignedTo
             },
             successHandler);
     };
+
     this.update = function (id, gender, firstname, lastname, firmId, email, phone, cellphone, category, role, notes,
-                            origin, errorFlag, prospected, successHandler) {
+                            origin, errorFlag, prospected, assignedTo, successHandler) {
         return DoleticServicesInterface.callService(
             this.meta.OBJECT, this.meta.ACTION.UPDATE,
             {
@@ -150,7 +152,9 @@ var ContactServicesInterface = new function () {
                 origin: origin,
                 errorFlag: errorFlag,
                 nextCallDate: null,
-                prospected: prospected
+                prospected: prospected,
+                assignedTo: assignedTo
+
             },
             successHandler);
     };

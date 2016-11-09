@@ -29,6 +29,7 @@ class Contact implements \JsonSerializable
     private $error_flag = null;
     private $next_call_date = null;
     private $prospected = null;
+    private $assigned_to = null;
     private $creation_date = null;
     private $created_by = null;
     private $last_update = null;
@@ -37,8 +38,8 @@ class Contact implements \JsonSerializable
      * @brief Constructs a contact
      */
     public function __construct($id, $gender, $firstname, $lastname, $firmId, $email, $phone, $cellphone, $category,
-                                $role, $notes, $origin, $error_flag, $next_call_date, $prospected, $creationDate,
-                                $createdBy, $lastUpdate)
+                                $role, $notes, $origin, $error_flag, $next_call_date, $prospected, $assignTo,
+                                $creationDate, $createdBy, $lastUpdate)
     {
         $this->id = intval($id);
         $this->gender = $gender;
@@ -55,6 +56,7 @@ class Contact implements \JsonSerializable
         $this->error_flag = $error_flag;
         $this->next_call_date = $next_call_date;
         $this->prospected = $prospected;
+        $this->assigned_to = $assignTo;
         $this->creation_date = $creationDate;
         $this->created_by = intval($createdBy);
         $this->last_update = $lastUpdate;
@@ -78,6 +80,7 @@ class Contact implements \JsonSerializable
             ContactDBObject::COL_ERROR_FLAG => $this->error_flag,
             ContactDBObject::COL_NEXT_CALL_DATE => $this->next_call_date,
             ContactDBObject::COL_PROSPECTED => $this->prospected,
+            ContactDBObject::COL_ASSIGNED_TO => $this->assigned_to,
             ContactDBObject::COL_CREATION_DATE => $this->creation_date,
             ContactDBObject::COL_CREATED_BY => $this->created_by,
             ContactDBObject::COL_LAST_UPDATE => $this->last_update
@@ -222,6 +225,14 @@ class Contact implements \JsonSerializable
     }
 
     /**
+     * @return int
+     */
+    public function getAssignedTo()
+    {
+        return $this->assigned_to;
+    }
+
+    /**
      * @return null
      */
     public function getCreationDate()
@@ -263,6 +274,7 @@ class ContactServices extends AbstractObjectServices
     const PARAM_ERROR_FLAG = "errorFlag";
     const PARAM_NEXT_CALL_DATE = "nextCallDate";
     const PARAM_PROSPECTED = "prospected";
+    const PARAM_ASSIGNED_TO = "assignedTo";
     const PARAM_CREATION_DATE = "creationDate";
     const PARAM_CREATED_BY = "createdBy";
     const PARAM_LAST_UPDATE = "lastUpdate";
@@ -313,7 +325,8 @@ class ContactServices extends AbstractObjectServices
                 $params[ContactServices::PARAM_ORIGIN],
                 $params[ContactServices::PARAM_ERROR_FLAG],
                 $params[ContactServices::PARAM_NEXT_CALL_DATE],
-                $params[ContactServices::PARAM_PROSPECTED]);
+                $params[ContactServices::PARAM_PROSPECTED],
+                $params[ContactServices::PARAM_ASSIGNED_TO]);
         } else if (!strcmp($action, ContactServices::FORCE_INSERT)) {
             $data = $this->__force_insert_contact(
                 $params[ContactServices::PARAM_ID],
@@ -331,6 +344,7 @@ class ContactServices extends AbstractObjectServices
                 $params[ContactServices::PARAM_ERROR_FLAG],
                 $params[ContactServices::PARAM_NEXT_CALL_DATE],
                 $params[ContactServices::PARAM_PROSPECTED],
+                $params[ContactServices::PARAM_ASSIGNED_TO],
                 $params[ContactServices::PARAM_CREATION_DATE],
                 $params[ContactServices::PARAM_CREATED_BY],
                 $params[ContactServices::PARAM_LAST_UPDATE]);
@@ -350,7 +364,8 @@ class ContactServices extends AbstractObjectServices
                 $params[ContactServices::PARAM_ORIGIN],
                 $params[ContactServices::PARAM_ERROR_FLAG],
                 $params[ContactServices::PARAM_NEXT_CALL_DATE],
-                $params[ContactServices::PARAM_PROSPECTED]);
+                $params[ContactServices::PARAM_PROSPECTED],
+                $params[ContactServices::PARAM_ASSIGNED_TO]);
         } else if (!strcmp($action, ContactServices::UPDATE_CATEGORY)) {
             $data = $this->__update_contact_category(
                 $params[ContactServices::PARAM_ID],
@@ -394,6 +409,7 @@ class ContactServices extends AbstractObjectServices
                     $row[ContactDBObject::COL_ERROR_FLAG],
                     $row[ContactDBObject::COL_NEXT_CALL_DATE],
                     $row[ContactDBObject::COL_PROSPECTED],
+                    $row[ContactDBObject::COL_ASSIGNED_TO],
                     $row[ContactDBObject::COL_CREATION_DATE],
                     $row[ContactDBObject::COL_CREATED_BY],
                     $row[ContactDBObject::COL_LAST_UPDATE]
@@ -410,7 +426,9 @@ class ContactServices extends AbstractObjectServices
         // create sql request
         $sql = parent::getDBObject()->GetTable(ContactDBObject::TABL_CONTACT)->GetSELECTQuery(
             array(DBTable::SELECT_ALL),
-            array(ContactDBObject::COL_CATEGORY)
+            array(ContactDBObject::COL_CATEGORY),
+            array(),
+            array(ContactDBObject::COL_CREATION_DATE => DBTable::ORDER_DESC)
         );
         // execute SQery and sresult
         $pdos = parent::getDBConnection()->ResultFromQuery($sql, $sql_params);
@@ -434,6 +452,7 @@ class ContactServices extends AbstractObjectServices
                     $row[ContactDBObject::COL_ERROR_FLAG],
                     $row[ContactDBObject::COL_NEXT_CALL_DATE],
                     $row[ContactDBObject::COL_PROSPECTED],
+                    $row[ContactDBObject::COL_ASSIGNED_TO],
                     $row[ContactDBObject::COL_CREATION_DATE],
                     $row[ContactDBObject::COL_CREATED_BY],
                     $row[ContactDBObject::COL_LAST_UPDATE]
@@ -474,6 +493,7 @@ class ContactServices extends AbstractObjectServices
                     $row[ContactDBObject::COL_ERROR_FLAG],
                     $row[ContactDBObject::COL_NEXT_CALL_DATE],
                     $row[ContactDBObject::COL_PROSPECTED],
+                    $row[ContactDBObject::COL_ASSIGNED_TO],
                     $row[ContactDBObject::COL_CREATION_DATE],
                     $row[ContactDBObject::COL_CREATED_BY],
                     $row[ContactDBObject::COL_LAST_UPDATE]
@@ -502,7 +522,7 @@ class ContactServices extends AbstractObjectServices
     // --- modify
 
     private function __insert_contact($gender, $firstname, $lastname, $firmId, $email, $phone, $cellphone, $category,
-                                      $role, $notes, $origin, $errorFlag, $nextCallDate, $prospected)
+                                      $role, $notes, $origin, $errorFlag, $nextCallDate, $prospected, $assignedTo)
     {
         // create sql params
         $sql_params = array(
@@ -521,6 +541,7 @@ class ContactServices extends AbstractObjectServices
             ":" . ContactDBObject::COL_ERROR_FLAG => $errorFlag,
             ":" . ContactDBObject::COL_NEXT_CALL_DATE => $nextCallDate,
             ":" . ContactDBObject::COL_PROSPECTED => $prospected,
+            ":" . ContactDBObject::COL_ASSIGNED_TO => $assignedTo,
             ":" . ContactDBObject::COL_CREATION_DATE => date('Y-m-d H:i:s'),
             ":" . ContactDBObject::COL_CREATED_BY => $this->getCurrentUser()->GetId(),
             ":" . ContactDBObject::COL_LAST_UPDATE => date('Y-m-d H:i:s')
@@ -532,7 +553,7 @@ class ContactServices extends AbstractObjectServices
 
     private function __force_insert_contact($id, $gender, $firstname, $lastname, $firmId, $email, $phone, $cellphone,
                                             $category, $role, $notes, $origin, $errorFlag, $nextCallDate, $prospected,
-                                            $creationDate, $createdBy, $lastUpdate)
+                                            $assignedTo, $creationDate, $createdBy, $lastUpdate)
     {
         // create sql params
         $sql_params = array(
@@ -551,6 +572,7 @@ class ContactServices extends AbstractObjectServices
             ":" . ContactDBObject::COL_ERROR_FLAG => $errorFlag,
             ":" . ContactDBObject::COL_NEXT_CALL_DATE => $nextCallDate,
             ":" . ContactDBObject::COL_PROSPECTED => $prospected,
+            ":" . ContactDBObject::COL_ASSIGNED_TO => $assignedTo,
             ":" . ContactDBObject::COL_CREATION_DATE => $creationDate,
             ":" . ContactDBObject::COL_CREATED_BY => $createdBy,
             ":" . ContactDBObject::COL_LAST_UPDATE => $lastUpdate
@@ -561,7 +583,8 @@ class ContactServices extends AbstractObjectServices
     }
 
     private function __update_contact($id, $gender, $firstname, $lastname, $firmId, $email, $phone, $cellphone,
-                                      $category, $role, $notes, $origin, $errorFlag, $nextCallDate, $prospected)
+                                      $category, $role, $notes, $origin, $errorFlag, $nextCallDate, $prospected,
+                                        $assignedTo)
     {
         // create sql params
         $sql_params = array(
@@ -580,6 +603,7 @@ class ContactServices extends AbstractObjectServices
             ":" . ContactDBObject::COL_ERROR_FLAG => $errorFlag,
             ":" . ContactDBObject::COL_NEXT_CALL_DATE => $nextCallDate,
             ":" . ContactDBObject::COL_PROSPECTED => $prospected,
+            ":" . ContactDBObject::COL_ASSIGNED_TO => $assignedTo,
             ":" . ContactDBObject::COL_LAST_UPDATE => date('Y-m-d H:i:s')
         );
         // sql request
@@ -599,6 +623,7 @@ class ContactServices extends AbstractObjectServices
                 ContactDBObject::COL_ERROR_FLAG,
                 ContactDBObject::COL_NEXT_CALL_DATE,
                 ContactDBObject::COL_PROSPECTED,
+                ContactDBObject::COL_ASSIGNED_TO,
                 ContactDBObject::COL_LAST_UPDATE
             )
         );
@@ -699,6 +724,7 @@ class ContactDBObject extends AbstractDBObject
     const COL_ERROR_FLAG = "errorFlag";
     const COL_NEXT_CALL_DATE = "nextCallDate";
     const COL_PROSPECTED = "prospected";
+    const COL_ASSIGNED_TO = "assigned_to";
     const COL_CREATION_DATE = "creation_date";
     const COL_CREATED_BY = "created_by";
     const COL_LAST_UPDATE = "last_update";
@@ -734,6 +760,7 @@ class ContactDBObject extends AbstractDBObject
             ->AddColumn(ContactDBObject::COL_ERROR_FLAG, DBTable::DT_INT, 11, true, -1)
             ->AddColumn(ContactDBObject::COL_NEXT_CALL_DATE, DBTable::DT_VARCHAR, 255, true, NULL)
             ->AddColumn(ContactDBObject::COL_PROSPECTED, DBTable::DT_INT, 11, true, 0)
+            ->AddColumn(ContactDBObject::COL_ASSIGNED_TO, DBTable::DT_INT, 11, true, NULL)
             ->AddColumn(ContactDBObject::COL_CREATION_DATE, DBTable::DT_VARCHAR, 255, false)
             ->AddColumn(ContactDBObject::COL_CREATED_BY, DBTable::DT_INT, 11, true, NULL)
             ->AddColumn(ContactDBObject::COL_LAST_UPDATE, DBTable::DT_VARCHAR, 255, false)
@@ -758,6 +785,12 @@ class ContactDBObject extends AbstractDBObject
             ->AddForeignKey(
                 ContactDBObject::TABL_CONTACT . '_fk4',
                 ContactDBObject::COL_CREATED_BY,
+                UserDataDBObject::TABL_USER_DATA,
+                UserDataDBObject::COL_USER_ID, DBTable::DT_SET_NULL, DBTable::DT_CASCADE
+            )
+            ->AddForeignKey(
+                ContactDBObject::TABL_CONTACT . '_fk5',
+                ContactDBObject::COL_ASSIGNED_TO,
                 UserDataDBObject::TABL_USER_DATA,
                 UserDataDBObject::COL_USER_ID, DBTable::DT_SET_NULL, DBTable::DT_CASCADE
             );

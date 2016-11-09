@@ -11,6 +11,8 @@ var DoleticUIModule = new function () {
         OLD_CONTACT: 'Ancien Client'
     };
 
+    window.currentDetails = -1;
+
     /**
      *    Override render function
      */
@@ -31,6 +33,7 @@ var DoleticUIModule = new function () {
                     DoleticUIModule.fillCountrySelector();
                     DoleticUIModule.fillGenderSelector();
                     DoleticUIModule.fillFirmSelector();
+                    DoleticUIModule.fillUserDataSelector();
                 });
                 DoleticUIModule.getOldContactsTab();
                 DoleticUIModule.getStatsTab();
@@ -51,7 +54,7 @@ var DoleticUIModule = new function () {
    								<a class=\"item active\" data-tab=\"companies\">Gestion des Sociétés</a> \
    								<a class=\"item\" data-tab=\"prospects\">Prospections à réaliser</a> \
    								<a class=\"item\" data-tab=\"achievedProspects\">Résultats des prospections</a> \
-   								<a class=\"item\" data-tab=\"contacts\">Contacts courants</a> \
+   								<a class=\"item\" data-tab=\"contacts\" id=\"contactsTabMenu\">Contacts courants</a> \
    								<a class=\"item\" data-tab=\"oldContacts\">Anciens contacts</a> \
    								<a class=\"item\" data-tab=\"contactDetails\" id=\"det_cont_tabChoose\">Détails du contact</a> \
  							</div> \
@@ -109,6 +112,9 @@ var DoleticUIModule = new function () {
     this.getContactsTab = function (callbackFct) {
         //$('#contact_form_modal').remove();
         $('#contactsTab').load("../modules/grc/ui/templates/contactsTab.html", function () {
+            $('#toggle_old_contacts').change(function () {
+                DoleticUIModule.fillContactList();
+            });
             DoleticUIModule.fillContactList();
             if (callbackFct) {
                 callbackFct();
@@ -208,8 +214,7 @@ var DoleticUIModule = new function () {
         $('#contact_gender_field .dropdown').dropdown('restore defaults');
         $('#contact_type_field .dropdown').dropdown('restore defaults');
         $('#contact_firm_field .dropdown').dropdown('restore defaults');
-        $('#contact_error_field .dropdown').dropdown('restore defaults');
-        $('#contact_prospected_field .dropdown').dropdown('restore defaults');
+        $('#contact_user_field .dropdown').dropdown('restore defaults');
 
         $('#contact_form h4').html("Ajout d'un contact");
         $('#addcontact_btn').html("Ajouter").attr("onClick", "DoleticUIModule.insertNewContact(); return false;");
@@ -234,9 +239,10 @@ var DoleticUIModule = new function () {
                 $('#contact_role').val(),
                 $('#contact_notes').val(),
                 $('#contact_origin').val(),
-                $('#contact_error').val(),
+                $('#contact_error').prop('checked') ? 1 : 0,
                 $('#sdatei_nextCalldate').val(),
-                $('#contact_prospected').val(),
+                $('#contact_prospected').prop('checked') ? 1 : 0,
+                $('#contact_user_search').dropdown('get value'),
                 function (data) {
                     DoleticUIModule.addContactHandler(data);
                 });
@@ -251,6 +257,7 @@ var DoleticUIModule = new function () {
             // if no service error
             if (data.code == 0 && data.object != "[]") {
 
+                window.currentDetails = contactId;
                 var tabTitle = "Détails de ";
                 tabTitle += data.object.firstname;
                 tabTitle += " ";
@@ -304,6 +311,9 @@ var DoleticUIModule = new function () {
                 $('#det_cont_tabChoose').show();
                 $('#det_cont_tabChoose').click();
 
+                $('#editcontact_modal_btn').attr('onClick', "DoleticUIModule.editContact(" + contactId + ");");
+                $('#deletecontact_btn').attr('onClick', "DoleticUIModule.deleteContact(" + contactId + ");");
+
             } else {
                 // use default service service error handler
                 DoleticServicesInterface.handleServiceError(data);
@@ -349,8 +359,9 @@ var DoleticUIModule = new function () {
                 $('#contact_gender_search').dropdown("set selected", data.object.gender);
                 $('#contact_type_search').dropdown("set selected", data.object.category);
                 $('#contact_firm_search').dropdown("set selected", data.object.firm_id);
-                $('#contact_prospected_search').dropdown("set selected", data.object.prospected);
-                $('#contact_error_search').dropdown("set selected", data.object.errorFlag);
+                $('#contact_prospected').prop('checked', data.object.prospected == 1);
+                $('#contact_user_search').dropdown('set selected', data.object.assigned_to);
+                $('#contact_error').prop('checked', data.object.errorFlag == 1);
                 $('#addcontact_btn').html("Confirmer").attr("onClick", "DoleticUIModule.updateContact(" + id + "); return false;");
                 $('#contact_form_modal').modal('show');
             } else {
@@ -386,7 +397,6 @@ var DoleticUIModule = new function () {
         // ADD OTHER TESTS
         if (DoleticUIModule.checkNewContactForm()) {
             // Insert new project in db
-            console.log("update");
             ContactServicesInterface.update(
                 id,
                 $('#contact_gender_search').dropdown('get value'),
@@ -400,8 +410,9 @@ var DoleticUIModule = new function () {
                 $('#contact_role').val(),
                 $('#contact_notes').val(),
                 $('#contact_origin').val(),
-                $('#contact_error').val(),
-                $('#contact_prospected').val(),
+                $('#contact_error').prop('checked') ? 1 : 0,
+                $('#contact_prospected').prop('checked') ? 1 : 0,
+                $('#contact_user_search').dropdown('get value'),
                 function (data) {
                     DoleticUIModule.editContactHandler(data);
                 });
@@ -529,6 +540,25 @@ var DoleticUIModule = new function () {
         }
         // insert html content
         $('#contact_firm_search .menu').html(content);
+    };
+
+    this.fillUserDataSelector = function () {
+        UserDataServicesInterface.getAll(function (data) {
+            // if no service error
+            if (data.code == 0) {
+                // create content var to build html
+                var content = '';
+                // iterate over values to build options
+                for (var i = 0; i < data.object.length; i++) {
+                    content += '<div class="item" data-value="' + data.object[i].user_id + '">' + data.object[i].firstname + ' ' + data.object[i].lastname + '</div>';
+                }
+                // insert html content
+                $('#contact_user_search .menu').html(content);
+            } else {
+                // use default service service error handler
+                DoleticServicesInterface.handleServiceError(data);
+            }
+        });
     };
 
     /**
@@ -795,6 +825,7 @@ var DoleticUIModule = new function () {
     };
 
     this.fillContactList = function () {
+        var showOld = $('#toggle_old_contacts').prop('checked');
         ContactServicesInterface.getByCategory(this.CONTACT_TYPES.CONTACT, function (data) {
             $('#contact_table_container').html('');
             // if no service error
@@ -837,8 +868,10 @@ var DoleticUIModule = new function () {
                     DoleticMasterInterface.reset_filter
                 ];
                 var counter = 0;
-                for (var i = 0; i < data.object.length && counter < 100; i++) {
-
+                for (var i in data.object) {
+                    if(counter >= 100 && !showOld) {
+                        break;
+                    }
                     var isProspected = "Non";
                     if (data.object[i].prospected == 1) {
                         isProspected = "Oui";
@@ -971,26 +1004,6 @@ var DoleticUIModule = new function () {
                 content += "</tbody></table>";
                 $('#oldContact_table_container').append(content);
                 DoleticMasterInterface.makeDataTables('oldContact_table', filters);
-            } else {
-                // use default service service error handler
-                DoleticServicesInterface.handleServiceError(data);
-            }
-        });
-    };
-
-    this.fillUserDataSelector = function () {
-        UserDataServicesInterface.getAll(function (data) {
-            // if no service error
-            if (data.code == 0) {
-                // create content var to build html
-                var content = '';
-                // iterate over values to build options
-                for (var i = 0; i < data.object.length; i++) {
-                    content += '<div class="item" data-value="' + data.object[i].user_id + '">' + data.object[i].firstname + ' ' + data.object[i].lastname + '</div>';
-                }
-                // insert html content
-
-                $('#contact_prospector_search .menu').html(content);
             } else {
                 // use default service service error handler
                 DoleticServicesInterface.handleServiceError(data);
@@ -1145,7 +1158,10 @@ var DoleticUIModule = new function () {
             // clear contact form
             DoleticUIModule.cancelNewContactForm();
             DoleticMasterInterface.showSuccess("Ajout réussi !", "Le contact a été ajouté avec succès !");
+            DoleticUIModule.fillAchievedProspectList();
+            DoleticUIModule.fillProspectList();
             DoleticUIModule.fillContactList();
+            DoleticUIModule.fillOldContactList();
         } else {
             // use default service service error handler
             DoleticServicesInterface.handleServiceError(data);
@@ -1158,7 +1174,10 @@ var DoleticUIModule = new function () {
             // clear contact form
             DoleticUIModule.cancelNewContactForm();
             DoleticMasterInterface.showSuccess("Édition réussie !", "Le contact a été modifié avec succès !");
+            DoleticUIModule.fillAchievedProspectList();
+            DoleticUIModule.fillProspectList();
             DoleticUIModule.fillContactList();
+            DoleticUIModule.fillOldContactList();
             DoleticMasterInterface.hideConfirmModal();
         } else {
             // use default service service error handler
@@ -1170,9 +1189,18 @@ var DoleticUIModule = new function () {
         ContactServicesInterface.delete(id, function (data) {
             // if no service error
             if (data.code == 0) {
+                if(window.currentDetails == id) {
+                    var leaveDetails = $('#det_cont_tabChoose').hide().hasClass('active');
+                    if(leaveDetails) {
+                        $('#contactsTabMenu').click();
+                    }
+                }
                 DoleticMasterInterface.hideConfirmModal();
                 DoleticMasterInterface.showSuccess("Suppression réussie !", "Le contact a été supprimé avec succès !");
                 DoleticUIModule.fillContactList();
+                DoleticUIModule.fillOldContactList();
+                DoleticUIModule.fillProspectList();
+                DoleticUIModule.fillAchievedProspectList();
             } else {
                 // use default service service error handler
                 DoleticServicesInterface.handleServiceError(data);
@@ -1255,15 +1283,6 @@ var DoleticUIModule = new function () {
         if ($('#contact_mail').val() != '' && !DoleticMasterInterface.checkMail($('#contact_mail').val())) {
             valid = false;
             $('#contact_email_field').addClass('error');
-        }
-        if ($('#contact_error').val() == '' || $('#contact_error').val() === null) {
-            valid = false;
-            $('#contact_error').addClass('error');
-        }
-        if ($('#contact_prospected').val() == '' || $('#contact_prospected').val() === null ||
-            ($('#contact_prospected').val() != 0 && $('#contact_prospected').val() != 1)) {
-            valid = false;
-            $('#contact_prospected_field').addClass('error');
         }
         if ($('#sdatei_nextCalldate').val() != '' && !DoleticMasterInterface.checkDate($('#sdatei_nextCalldate').val())) {
             valid = false;

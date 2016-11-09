@@ -31,9 +31,11 @@ class GRCModule extends AbstractModule
                 // ---- contact object services
                 ContactDBObject::OBJ_NAME . ':' . ContactServices::GET_CONTACT_BY_ID => RightsMap::U_RMASK,    // only super admin
                 ContactDBObject::OBJ_NAME . ':' . ContactServices::GET_ALL_CONTACTS => RightsMap::U_RMASK,    // everyone
+                ContactDBObject::OBJ_NAME . ':' . ContactServices::GET_CONTACTS_BY_CATEGORY => RightsMap::U_RMASK,    // everyone
                 ContactDBObject::OBJ_NAME . ':' . ContactServices::GET_ALL_CONTACT_TYPES => RightsMap::U_RMASK,    // everyone
                 ContactDBObject::OBJ_NAME . ':' . ContactServices::INSERT => RightsMap::A_RMASK,  // everyone
                 ContactDBObject::OBJ_NAME . ':' . ContactServices::UPDATE => RightsMap::A_RMASK,    // everyone
+                ContactDBObject::OBJ_NAME . ':' . ContactServices::UPDATE_CATEGORY => RightsMap::A_RMASK,    // everyone
                 ContactDBObject::OBJ_NAME . ':' . ContactServices::DELETE => RightsMap::SA_RMASK, // only super admin
 
                 // ---- contact object services
