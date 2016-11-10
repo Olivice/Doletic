@@ -1150,29 +1150,6 @@ var DoleticUIModule = new function () {
         }
     };
 
-    this.deleteContactHandler = function (id) {
-        ContactServicesInterface.delete(id, function (data) {
-            // if no service error
-            if (data.code == 0) {
-                if (window.currentDetails == id) {
-                    var leaveDetails = $('#det_cont_tabChoose').hide().hasClass('active');
-                    if (leaveDetails) {
-                        $('#contactsTabMenu').click();
-                    }
-                }
-                DoleticMasterInterface.hideConfirmModal();
-                DoleticMasterInterface.showSuccess("Suppression réussie !", "Le contact a été supprimé avec succès !");
-                DoleticUIModule.fillContactList();
-                DoleticUIModule.fillOldContactList();
-                DoleticUIModule.fillProspectList();
-                DoleticUIModule.fillAchievedProspectList();
-            } else {
-                // use default service service error handler
-                DoleticServicesInterface.handleServiceError(data);
-            }
-        });
-    };
-
     this.addFirmHandler = function (data) {
         // if no service error
         if (data.code == 0) {
@@ -1197,20 +1174,6 @@ var DoleticUIModule = new function () {
             // use default service service error handler
             DoleticServicesInterface.handleServiceError(data);
         }
-    };
-
-    this.deleteFirmHandler = function (id) {
-        FirmServicesInterface.delete(id, function (data) {
-            // if no service error
-            if (data.code == 0) {
-                DoleticMasterInterface.hideConfirmModal();
-                DoleticMasterInterface.showSuccess("Suppression réussie !", "La société a été supprimée avec succès !");
-                DoleticUIModule.fillFirmList(false);
-            } else {
-                // use default service service error handler
-                DoleticServicesInterface.handleServiceError(data);
-            }
-        });
     };
 
     this.checkNewContactForm = function () {
