@@ -787,7 +787,7 @@ var DoleticUIModule = new function () {
                             '</td>' +
                             '<td>' +
                             '<div class="ui icon buttons">' +
-                            '<button class="ui olive icon button" data-tooltip="Terminer" onClick="DoleticUIModule.' + (task.ended ? 'un' : '') + 'endTask(' + task.id + ', ' + number + '); return false;">' +
+                            '<button class="ui olive icon button" data-tooltip="' + (task.ended ? 'Annuler' : 'Terminer') + '" onClick="DoleticUIModule.' + (task.ended ? 'un' : '') + 'endTask(' + task.id + ', ' + number + '); return false;">' +
                             '<i class="' + (task.ended ? 'reply' : 'checkmark') + ' icon"></i>' +
                             '</button>' +
                             '<button class="ui blue icon button" data-tooltip="Modifier" onClick="DoleticUIModule.editTask(' + task.id + ', ' + number + '); return false;">' +

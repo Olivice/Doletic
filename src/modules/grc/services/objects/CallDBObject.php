@@ -49,7 +49,7 @@ class Call implements \JsonSerializable
             CallDBObject::COL_CONTACT_ID => $this->contact_id,
             CallDBObject::COL_CALL_DATE => $this->call_date,
             CallDBObject::COL_CATEGORY => $this->category,
-            CallDBObject::COL_AUTHOR=> $this->author,
+            CallDBObject::COL_AUTHOR => $this->author,
             CallDBObject::COL_NOTES => $this->notes,
             CallDBObject::COL_REPLIED => $this->replied,
             CallDBObject::COL_CREATION_DATE => $this->creation_date,
@@ -172,6 +172,7 @@ class CallServices extends AbstractObjectServices
     // --- actions
     const GET_CALL_BY_ID = "byid";
     const GET_ALL_CALLS = "all";
+    const GET_CALLS_BY_CONTACT = "bycont";
     const GET_ALL_CALL_TYPES = "alltypes";
     const INSERT = "insert";
     const UPDATE = "update";
@@ -192,6 +193,8 @@ class CallServices extends AbstractObjectServices
         $data = null;
         if (!strcmp($action, CallServices::GET_CALL_BY_ID)) {
             $data = $this->__get_call_by_id($params[CallServices::PARAM_ID]);
+        } else if (!strcmp($action, CallServices::GET_CALLS_BY_CONTACT)) {
+            $data = $this->__get_calls_by_contact($params[CallServices::PARAM_CONTACT_ID]);
         } else if (!strcmp($action, CallServices::GET_ALL_CALLS)) {
             $data = $this->__get_all_calls();
         } else if (!strcmp($action, CallServices::GET_ALL_CALL_TYPES)) {
@@ -219,7 +222,6 @@ class CallServices extends AbstractObjectServices
         } else if (!strcmp($action, CallServices::UPDATE)) {
             $data = $this->__update_call(
                 $params[CallServices::PARAM_ID],
-                $params[CallServices::PARAM_CONTACT_ID],
                 $params[CallServices::PARAM_CALL_DATE],
                 $params[CallServices::PARAM_CATEGORY],
                 $params[CallServices::PARAM_AUTHOR],
@@ -263,6 +265,36 @@ class CallServices extends AbstractObjectServices
             }
         }
         return $call;
+    }
+
+    private function __get_calls_by_contact($contactId)
+    {
+        // create sql params array
+        $sql_params = array(":" . CallDBObject::COL_CONTACT_ID => $contactId);
+        // create sql request
+        $sql = parent::getDBObject()->GetTable(CallDBObject::TABL_CALL)->GetSELECTQuery(
+            array(DBTable::SELECT_ALL), array(CallDBObject::COL_CONTACT_ID));
+        // execute SQery and sresult
+        $pdos = parent::getDBConnection()->ResultFromQuery($sql, $sql_params);
+        // create an empty array for contacts and fill it
+        $calls = array();
+        if (isset($pdos)) {
+            while (($row = $pdos->fetch()) !== false) {
+                array_push($calls, new Call(
+                    $row[CallDBObject::COL_ID],
+                    $row[CallDBObject::COL_CONTACT_ID],
+                    $row[CallDBObject::COL_CALL_DATE],
+                    $row[CallDBObject::COL_CATEGORY],
+                    $row[CallDBObject::COL_AUTHOR],
+                    $row[CallDBObject::COL_NOTES],
+                    $row[CallDBObject::COL_REPLIED],
+                    $row[CallDBObject::COL_CREATION_DATE],
+                    $row[CallDBObject::COL_CREATED_BY],
+                    $row[CallDBObject::COL_LAST_UPDATE]
+                ));
+            }
+        }
+        return $calls;
     }
 
     private function __get_all_calls()
@@ -336,7 +368,7 @@ class CallServices extends AbstractObjectServices
     }
 
     private function __force_insert_call($id, $contactId, $callDate, $category, $author, $notes, $replied,
-                                            $creationDate, $createdBy, $lastUpdate)
+                                         $creationDate, $createdBy, $lastUpdate)
     {
         // create sql params
         $sql_params = array(
@@ -356,12 +388,11 @@ class CallServices extends AbstractObjectServices
         return parent::getDBConnection()->PrepareExecuteQuery($sql, $sql_params);
     }
 
-    private function __update_call($id, $contactId, $callDate, $category, $author, $notes, $replied)
+    private function __update_call($id, $callDate, $category, $author, $notes, $replied)
     {
         // create sql params
         $sql_params = array(
             ":" . CallDBObject::COL_ID => $id,
-            ":" . CallDBObject::COL_CONTACT_ID => $contactId,
             ":" . CallDBObject::COL_CALL_DATE => $callDate,
             ":" . CallDBObject::COL_CATEGORY => $category,
             ":" . CallDBObject::COL_AUTHOR => $author,
@@ -370,7 +401,16 @@ class CallServices extends AbstractObjectServices
             ":" . CallDBObject::COL_LAST_UPDATE => date('Y-m-d H:i:s')
         );
         // sql request
-        $sql = parent::getDBObject()->GetTable(CallDBObject::TABL_CALL)->GetUPDATEQuery();
+        $sql = parent::getDBObject()->GetTable(CallDBObject::TABL_CALL)->GetUPDATEQuery(
+            array(
+                CallDBObject::COL_CALL_DATE,
+                CallDBObject::COL_CATEGORY,
+                CallDBObject::COL_AUTHOR,
+                CallDBObject::COL_NOTES,
+                CallDBObject::COL_REPLIED,
+                CallDBObject::COL_LAST_UPDATE
+            )
+        );
         // execute query
         return parent::getDBConnection()->PrepareExecuteQuery($sql, $sql_params);
     }

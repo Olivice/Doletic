@@ -4,6 +4,7 @@ require_once "interfaces/AbstractModule.php";
 require_once "../modules/kernel/services/objects/UserDataDBObject.php";
 require_once "../modules/grc/services/objects/ContactDBObject.php";
 require_once "../modules/grc/services/objects/FirmDBObject.php";
+require_once "../modules/grc/services/objects/CallDBObject.php";
 
 class GRCModule extends AbstractModule
 {
@@ -52,6 +53,7 @@ class GRCModule extends AbstractModule
         // -- add module specific dbo objects
         parent::addDBObject(new FirmDBObject($this));
         parent::addDBObject(new ContactDBObject($this));
+        parent::addDBObject(new CallDBObject($this));
         // -- add module specific ui
         parent::addUI('Super-admins', 'superadmin');    // refer to couple (admin.js, admin.css)
         parent::addUI('Administration', 'admin', false);    // refer to couple (admin.js, admin.css)

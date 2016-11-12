@@ -91,11 +91,96 @@
             </div>
         </div>
         <div class="twelve wide column">
-            <div class="ui horizontal divider">
-                Historique des appels
+            <div class="row">
+                <div class="ui horizontal divider">
+                    Historique des prises de contact
+                </div>
+                <div class="sixteen wide column" id="call_table_container">
+                </div>
             </div>
-            <div class="row" id="call_table_container">
-                <i>Prochainement disponible ...</i>
+            <br>
+            <div class="row">
+                <div class="center aligned five wide column"></div>
+                <div class="center aligned six wide column">
+                    <div id="addcall_modal_btn" class="ui green fluid button"
+                         onClick="DoleticUIModule.showNewCallForm(-1);">
+                        Ajouter une prise de contact
+                    </div>
+                </div>
+                <div class="center aligned five wide column"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="ui modal" id="call_form_modal">
+    <form id="call_form" class="ui form segment">
+        <h4 class="ui dividing header">Ajout d'une prise de contact</h4>
+        <div class="fields">
+            <div id="call_date_field" class="sixteen wide required field">
+                <label>Date de contact</label>
+                <div class="ui calendar" id="call_date_calendar">
+                    <div class="ui input left icon">
+                        <i class="calendar icon"></i>
+                        <input id="call_date" placeholder="AAAA-mm-jj" type="text"/>
+                    </div>
+                </div>
+            </div>
+            <div class="eight wide required field" id="call_author_field">
+                <label>Auteur</label>
+                <div id="call_author_search" class="ui fluid search selection dropdown">
+                    <input type="hidden" id="call_author"/>
+                    <i class="dropdown icon"></i>
+                    <div class="default text">Auteur...</div>
+                    <div class="menu">
+                        <!-- AUTHORS WILL GO HERE -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="fields">
+            <div class="eight wide required field" id="call_type_field">
+                <label>Type de contact</label>
+                <div id="call_type_search" class="ui fluid search selection dropdown">
+                    <input type="hidden" id="call_type_user"/>
+                    <i class="dropdown icon"></i>
+                    <div class="default text">Type...</div>
+                    <div class="menu">
+                        <!-- TYPES WILL GO HERE -->
+                    </div>
+                </div>
+            </div>
+            <div class="eight wide required field" id="call_replied_field">
+                <div class="ui toggle checkbox">
+                    <input type="checkbox" id="call_replied">
+                    <label>Réponse reçue ?</label>
+                </div>
+            </div>
+        </div>
+        <div id="call_notes_field" class="sixteen wide field">
+            <label>Notes</label>
+            <textarea id="call_notes" placeholder="Notes..."></textarea>
+        </div>
+        <div class="ui hr_center small buttons">
+            <div id="call_abort_btn" class="ui button" onClick="DoleticUIModule.clearNewCallForm(-1);">Annuler</div>
+            <div class="or" data-text="ou"></div>
+            <div id="addcall_btn" class="ui green button" onClick="DoleticUIModule.insertNewCall(-1);">Ajouter
+            </div>
+        </div>
+    </form>
+</div>
+<div class="ui basic modal" id="content_modal">
+    <div class="header">Notes de l'appel</div>
+    <div class="image content">
+        <div class="image"><i class="line chart icon"></i></div>
+        <div class="description">
+            <p id="content_modal_text"></p>
+        </div>
+    </div>
+    <div class="actions">
+        <div class="one fluid ui inverted buttons">
+            <div class="ui green basic inverted button" onclick="DoleticUIModule.hideContentModal();"><i
+                    class="checkmark icon"></i>
+                Ok
             </div>
         </div>
     </div>
