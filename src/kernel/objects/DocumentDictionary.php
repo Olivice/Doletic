@@ -177,6 +177,7 @@ class DocumentDictionary
         }
 
         $total_int = $int['details'][ProjectDBObject::COL_JEH_ASSIGNED] * $int['details'][ProjectDBObject::COL_PAY];
+        $total_int_ttc = $int['details'][ProjectDBObject::COL_JEH_ASSIGNED] * ($int['details'][ProjectDBObject::COL_PAY]-10);
         $fmt = new NumberFormatter('fr', NumberFormatter::SPELLOUT);
         $total_int_l = $fmt->format($total_int);
 
@@ -195,8 +196,8 @@ class DocumentDictionary
             'TOTALINTERVENANT_L' => $total_int, //total d'indemnisation brut
             'TOTALINTERVENANT' => $total_int_l, //total d'indemnisation brut en lettre
             'TARIFINTERV' => $int['details'][ProjectDBObject::COL_PAY], //nb de euros par jeh
-            'TOTALINTERVENANTTTC_L' => ($total_int - 10), //total TTC
-            'TOTALINTERVENANTTTC' => $fmt->format($total_int - 10), //total TTC en lettre
+            'TOTALINTERVENANTTTC_L' => $total_int_ttc, //total TTC
+            'TOTALINTERVENANTTTC' => $fmt->format($total_int_ttc), //total TTC en lettre
             'NOMPRESIDENT' => isset($president) ? $president->GetFirstname() . ' ' . mb_strtoupper($president->GetLastname(), 'UTF-8') : 'NOM PRESIDENT',
             'DJOUR' => date('d/m/Y'), //date actuelle au format 05/05/1994
         ];
