@@ -25,23 +25,29 @@ var DoleticUIModule = new function () {
         // Load HTML templates
         DoleticUIModule.getCompaniesTab(function () {
             DoleticUIModule.fillFirmList(function () {
-                DoleticUIModule.getProspectsTab();
-                DoleticUIModule.getAchievedProspectsTab();
-                DoleticUIModule.getContactsTab(function () {
-                    DoleticUIModule.fillContactTypeSelector();
-                    DoleticUIModule.fillFirmTypeSelector();
-                    DoleticUIModule.fillCountrySelector();
-                    DoleticUIModule.fillGenderSelector();
-                    DoleticUIModule.fillFirmSelector();
-                    DoleticUIModule.fillUserDataSelector();
+                DoleticUIModule.getContactDetailsTab(function () {
+                    DoleticUIModule.fillCallTypeSelector();
                 });
+                DoleticUIModule.getProspectsTab();
                 DoleticUIModule.getOldContactsTab();
                 DoleticUIModule.getStatsTab();
-                DoleticUIModule.getContactDetailsTab();
+                DoleticUIModule.getAchievedProspectsTab();
+                DoleticUIModule.getContactsTab(function () {
+                    DoleticUIModule.fillUserDataSelector(function () {
+                        DoleticUIModule.fillContactTypeSelector();
+                        DoleticUIModule.fillFirmTypeSelector();
+                        DoleticUIModule.fillCountrySelector();
+                        DoleticUIModule.fillGenderSelector();
+                        DoleticUIModule.fillFirmSelector();
+                        DoleticUIModule.fillContactList();
+                        DoleticUIModule.fillProspectList();
+                        DoleticUIModule.fillAchievedProspectList();
+                        DoleticUIModule.fillOldContactList();
+                        window.postLoad();
+                    });
+                });
             });
         });
-
-        window.postLoad();
     };
     /**
      *    Override build function
@@ -110,12 +116,11 @@ var DoleticUIModule = new function () {
      *    Load the HTML code of the Contacts Tab
      */
     this.getContactsTab = function (callbackFct) {
-        //$('#contact_form_modal').remove();
         $('#contactsTab').load("../modules/grc/ui/templates/contactsTab.html", function () {
             $('#toggle_old_contacts').change(function () {
                 DoleticUIModule.fillContactList();
             });
-            DoleticUIModule.fillContactList();
+            DoleticMasterInterface.makeDefaultCalendar('contact_nextCallDate_field');
             if (callbackFct) {
                 callbackFct();
             }
@@ -143,7 +148,6 @@ var DoleticUIModule = new function () {
     this.getProspectsTab = function (callbackFct) {
         //$('#prospects_form_modal').remove();
         $('#prospectsTab').load("../modules/grc/ui/templates/prospectsTab.html", function () {
-            DoleticUIModule.fillProspectList();
             if (callbackFct) {
                 callbackFct();
             }
@@ -154,9 +158,7 @@ var DoleticUIModule = new function () {
      *    Load the HTML code of the Propects Tab
      */
     this.getAchievedProspectsTab = function (callbackFct) {
-        //$('#prospects_form_modal').remove();
         $('#achievedProspectsTab').load("../modules/grc/ui/templates/achievedProspectsTab.html", function () {
-            DoleticUIModule.fillAchievedProspectList();
             if (callbackFct) {
                 callbackFct();
             }
@@ -167,9 +169,7 @@ var DoleticUIModule = new function () {
      *    Load the HTML code of the Contacts Tab
      */
     this.getOldContactsTab = function (callbackFct) {
-        //$('#contact_form_modal').remove();
         $('#oldContactsTab').load("../modules/grc/ui/templates/oldContactsTab.html", function () {
-            DoleticUIModule.fillOldContactList();
             if (callbackFct) {
                 callbackFct();
             }
@@ -189,6 +189,7 @@ var DoleticUIModule = new function () {
     this.getContactDetailsTab = function (callbackFct) {
         $('#contactDetailsTab').load("../modules/grc/ui/templates/contactDetailsTab.html", function () {
             $('#deletecontact_btn').remove();
+            DoleticMasterInterface.makeDefaultCalendar('call_date_field');
             if (callbackFct) {
                 callbackFct();
             }
@@ -221,6 +222,16 @@ var DoleticUIModule = new function () {
         $('#addcontact_btn').html("Ajouter").attr("onClick", "DoleticUIModule.insertNewContact(); return false;");
     };
 
+    this.clearNewCallForm = function (contactId) {
+        $('#call_form .message').remove();
+        $('#call_form')[0].reset();
+        $('#call_type_field .dropdown').dropdown('restore defaults');
+        $('#call_author_field .dropdown').dropdown('restore defaults');
+
+        $('#call_form h4').html("Ajout d'un contact");
+        $('#addcall_btn').html("Ajouter").attr("onClick", "DoleticUIModule.insertNewCall(" + contactId + "); return false;");
+    };
+
     /**
      *    Add a new Contact
      */
@@ -248,6 +259,88 @@ var DoleticUIModule = new function () {
                     DoleticUIModule.addContactHandler(data);
                 });
         }
+    };
+
+    this.fillCallList = function (contactId) {
+        CallServicesInterface.getByContact(contactId, function (data) {
+            $('#call_table_container').html('');
+            // if no service error
+            if (data.code == 0 && data.object != "[]") {
+                var content = "<table class=\"ui very basic celled table\" id=\"call_table\"> \
+                <thead> \
+                    <tr>\
+                        <th>Date</th> \
+                        <th>Type</th> \
+                        <th>Auteur</th> \
+                        <th>Notes</th> \
+                        <th>Répondu ?</th> \
+                        <th>Actions</th> \
+                    </tr>\
+                </thead>\
+                <tfoot> \
+                    <tr>\
+                        <th>Date</th> \
+                        <th>Type</th> \
+                        <th>Auteur</th> \
+                        <th>Notes</th> \
+                        <th>Répondu ?</th> \
+                        <th></th> \
+                    </tr>\
+                </tfoot>\
+                <tbody id=\"call_body\">";
+
+                var filters = [
+                    DoleticMasterInterface.input_filter,
+                    DoleticMasterInterface.select_filter,
+                    DoleticMasterInterface.select_filter,
+                    DoleticMasterInterface.input_filter,
+                    DoleticMasterInterface.select_filter,
+                    DoleticMasterInterface.reset_filter
+                ];
+
+                for (var i = 0; i < data.object.length; i++) {
+                    var authorHtml = "<i>Personne</i>";
+                    if (data.object[i].author != null && typeof window.user_list[data.object[i].author] !== 'undefined') {
+                        var click = $('#submenu_hr').attr('onclick');
+                        click = click.substr(0, click.length - 2) + ", 'DoleticUIModule.fillUserDetails(";
+                        var onClick = click + data.object[i].author + ");');";
+                        authorHtml = '<a href="#" onclick="' + onClick + '">' + window.user_list[data.object[i].author].firstname
+                            + ' ' + window.user_list[data.object[i].author].lastname + "</a><br>";
+                    }
+
+                    content += "<tr><td>" + data.object[i].callDate + "</td> \
+			      					<td>" + data.object[i].category + "</td> \
+			      					<td>" + authorHtml + "</td> \
+			      					<td>" +
+                        '<button class="ui teal button" onClick="DoleticUIModule.showContentModal(\'' + data.object[i].notes + '\'); return false;">Afficher</button>' +
+                        "</td> \
+                          <td>" + (data.object[i].replied == 1 ? "Oui" : "Non") + "</td>\
+			    				<td> \
+			    					<div class=\"ui icon buttons\"> \
+				    					<button class=\"ui blue icon button\" data-tooltip=\"Modifier\" onClick=\"DoleticUIModule.editCall(" + data.object[i].id + "); return false;\"> \
+				  							<i class=\"write icon\"></i> \
+										</button>\
+										</div> \
+			    				</td> \
+			    				</tr>";
+                }
+                content += "</tbody></table>";
+                $('#call_table_container').append(content);
+                DoleticMasterInterface.makeDataTables('call_table', filters);
+            } else {
+                // use default service service error handler
+                DoleticServicesInterface.handleServiceError(data);
+            }
+        });
+    };
+
+    this.showContentModal = function (content) {
+        $('#content_modal_text').html(content);
+        $('#content_modal').modal('show');
+    };
+
+    this.hideContentModal = function () {
+        $('#content_modal').modal('hide');
     };
 
     /**
@@ -312,13 +405,72 @@ var DoleticUIModule = new function () {
                 $('#det_cont_tabChoose').show();
                 $('#det_cont_tabChoose').click();
 
+                DoleticUIModule.fillCallList(contactId);
+
+                $('#addcall_modal_btn').attr('onClick', "DoleticUIModule.showNewCallForm(" + contactId + ");");
+                $('#call_abort_btn').attr('onClick', "DoleticUIModule.clearNewCallForm(" + contactId + ");");
+                $('#addcall_btn').attr('onClick', "DoleticUIModule.insertNewCall(" + contactId + ");");
                 $('#editcontact_modal_btn').attr('onClick', "DoleticUIModule.editContact(" + contactId + ");");
+                $('#deletecontact_btn').attr('onClick', "DoleticUIModule.deleteContact(" + contactId + ");");
 
             } else {
                 // use default service service error handler
                 DoleticServicesInterface.handleServiceError(data);
             }
         });
+    };
+
+    this.insertNewCall = function (contactId) {
+        // ADD OTHER TESTS
+        if (DoleticUIModule.checkNewCallForm()) {
+            // Insert new project in db
+            CallServicesInterface.insert(
+                contactId,
+                $('#call_date').val(),
+                $('#call_type_search').dropdown('get value'),
+                $('#call_author_search').dropdown('get value'),
+                $('#call_notes').val(),
+                $('#call_replied').prop('checked') ? 1 : 0,
+                function (data) {
+                    DoleticUIModule.addCallHandler(data, contactId);
+                });
+        }
+    };
+
+    this.editCall = function (id) {
+        $('#call_form h4').html("Edition d'une prise de contact");
+        CallServicesInterface.getById(id, function (data) {
+            // if no service error
+            if (data.code == 0 && data.object != "[]") {
+                $('#call_date').val(data.object.callDate);
+                $('#call_notes').val(data.object.notes);
+                $('#call_author_search').dropdown("set selected", data.object.author);
+                $('#call_type_search').dropdown("set selected", data.object.category);
+                $('#call_replied').prop('checked', data.object.replied == 1);
+                $('#addcall_btn').html("Confirmer").attr("onClick", "DoleticUIModule.updateCall(" + id + "); return false;");
+                $('#call_form_modal').modal('show');
+            } else {
+                // use default service service error handler
+                DoleticServicesInterface.handleServiceError(data);
+            }
+        });
+    };
+
+    this.updateCall = function (id) {
+        // ADD OTHER TESTS
+        if (DoleticUIModule.checkNewCallForm()) {
+            // Insert new project in db
+            CallServicesInterface.update(
+                id,
+                $('#call_date').val(),
+                $('#call_type_search').dropdown('get value'),
+                $('#call_author_search').dropdown('get value'),
+                $('#call_notes').val(),
+                $('#call_replied').prop('checked') ? 1 : 0,
+                function (data) {
+                    DoleticUIModule.editCallHandler(data, window.currentDetails);
+                });
+        }
     };
 
     /**
@@ -542,18 +694,43 @@ var DoleticUIModule = new function () {
         $('#contact_firm_search .menu').html(content);
     };
 
-    this.fillUserDataSelector = function () {
+    this.fillUserDataSelector = function (callback) {
         UserDataServicesInterface.getAll(function (data) {
+            // if no service error
+            if (data.code == 0) {
+                window.user_list = [];
+                // create content var to build html
+                var content = '';
+                // iterate over values to build options
+                for (var i = 0; i < data.object.length; i++) {
+                    content += '<div class="item" data-value="' + data.object[i].user_id + '">' + data.object[i].firstname + ' ' + data.object[i].lastname + '</div>';
+                    window.user_list[data.object[i].id] = data.object[i];
+                }
+                // insert html content
+                $('#contact_user_search .menu').html(content);
+                $('#call_author_search .menu').html(content);
+                if (callback) {
+                    callback();
+                }
+            } else {
+                // use default service service error handler
+                DoleticServicesInterface.handleServiceError(data);
+            }
+        });
+    };
+
+    this.fillCallTypeSelector = function () {
+        CallServicesInterface.getAllCallTypes(function (data) {
             // if no service error
             if (data.code == 0) {
                 // create content var to build html
                 var content = '';
                 // iterate over values to build options
                 for (var i = 0; i < data.object.length; i++) {
-                    content += '<div class="item" data-value="' + data.object[i].user_id + '">' + data.object[i].firstname + ' ' + data.object[i].lastname + '</div>';
+                    content += '<div class="item" data-value="' + data.object[i] + '">' + data.object[i] + '</div>';
                 }
                 // insert html content
-                $('#contact_user_search .menu').html(content);
+                $('#call_type_search .menu').html(content);
             } else {
                 // use default service service error handler
                 DoleticServicesInterface.handleServiceError(data);
@@ -658,6 +835,7 @@ var DoleticUIModule = new function () {
                         <th>Mobile</th> \
                         <th>Société</th> \
                         <th>Role</th> \
+                        <th>Assigné à</th> \
                         <th>Actions</th> \
                     </tr>\
                 </thead>\
@@ -669,6 +847,7 @@ var DoleticUIModule = new function () {
                         <th>Mobile</th> \
                         <th>Société</th> \
                         <th>Role</th> \
+                        <th>Assigné à</th> \
                         <th></th> \
                     </tr>\
                 </tfoot>\
@@ -681,11 +860,19 @@ var DoleticUIModule = new function () {
                     DoleticMasterInterface.input_filter,
                     DoleticMasterInterface.select_filter,
                     DoleticMasterInterface.input_filter,
+                    DoleticMasterInterface.select_filter,
                     DoleticMasterInterface.reset_filter
                 ];
                 var counter = 0;
                 for (var i = 0; i < data.object.length && counter < 100; i++) {
-
+                    var assignedHtml = "<i>Personne</i>";
+                    if (data.object[i].assigned_to != null && typeof window.user_list[data.object[i].assigned_to] !== 'undefined') {
+                        var click = $('#submenu_hr').attr('onclick');
+                        click = click.substr(0, click.length - 2) + ", 'DoleticUIModule.fillUserDetails(";
+                        var onClick = click + data.object[i].assigned_to + ");');";
+                        assignedHtml = '<a href="#" onclick="' + onClick + '">' + window.user_list[data.object[i].assigned_to].firstname
+                            + ' ' + window.user_list[data.object[i].assigned_to].lastname + "</a><br>";
+                    }
                     content += "<tr><td>\
                     			    <button class=\"ui teal icon button\" data-tooltip=\"Détails du contact\" onClick=\"DoleticUIModule.openContactInfo(" + data.object[i].id + "); return false;\"> \
 				  					    <i class=\"user icon\"></i> \
@@ -700,6 +887,7 @@ var DoleticUIModule = new function () {
 			      					<td>" + data.object[i].cellphone + "</td> \
 			      					<td>" + (typeof window.firm_list[data.object[i].firm_id] !== 'undefined' ? window.firm_list[data.object[i].firm_id].name : '<i>Aucune</i>') + "</td> \
 			    				    <td>" + data.object[i].role + "</td> \
+			    				    <td>" + assignedHtml + "</td> \
 			    				    <td> \
 			    					<div class=\"ui icon buttons\"> \
 				    					<button class=\"ui blue icon button\" data-tooltip=\"Modifier\" onClick=\"DoleticUIModule.editContact(" + data.object[i].id + "); return false;\"> \
@@ -708,7 +896,7 @@ var DoleticUIModule = new function () {
                         "<button class=\"ui yellow icon button\" data-tooltip=\"Marquer comme prospecté\" onClick=\"DoleticUIModule.achieveProspect(" + data.object[i].id + ");\"> \
                               <i class=\"call icon\"></i> \
                         </button> \
-									</div> \
+                        </div> \
 			    				</td> \
 			    				</tr>";
                     counter++;
@@ -737,6 +925,7 @@ var DoleticUIModule = new function () {
                         <th>Role</th> \
                         <th>Prochaine prospection</th> \
                         <th>Coordonnées</th> \
+                        <th>Assigné à</th> \
                         <th>Actions</th> \
                     </tr>\
                 </thead>\
@@ -748,6 +937,7 @@ var DoleticUIModule = new function () {
                         <th>Role</th> \
                         <th>Prochaine prospection</th> \
                         <th>Coordonnées</th> \
+                        <th>Assigné à</th> \
                         <th></th> \
                     </tr>\
                 </tfoot>\
@@ -760,10 +950,19 @@ var DoleticUIModule = new function () {
                     DoleticMasterInterface.input_filter,
                     DoleticMasterInterface.input_filter,
                     DoleticMasterInterface.select_filter,
+                    DoleticMasterInterface.select_filter,
                     DoleticMasterInterface.reset_filter
                 ];
                 var counter = 0;
                 for (var i = 0; i < data.object.length && counter < 100; i++) {
+                    var assignedHtml = "<i>Personne</i>";
+                    if (data.object[i].assigned_to != null && typeof window.user_list[data.object[i].assigned_to] !== 'undefined') {
+                        var click = $('#submenu_hr').attr('onclick');
+                        click = click.substr(0, click.length - 2) + ", 'DoleticUIModule.fillUserDetails(";
+                        var onClick = click + data.object[i].assigned_to + ");');";
+                        assignedHtml = '<a href="#" onclick="' + onClick + '">' + window.user_list[data.object[i].assigned_to].firstname
+                            + ' ' + window.user_list[data.object[i].assigned_to].lastname + "</a><br>";
+                    }
 
                     var nextCallDate = "<i>Aucune</i>";
                     if (data.object[i].nextCallDate !== null) {
@@ -789,6 +988,7 @@ var DoleticUIModule = new function () {
 			    				    <td>" + data.object[i].role + "</td> \
 			      					<td>" + nextCallDate + "</td> \
 			    				    <td>" + error + "</td> \
+			    				    <td>" + assignedHtml + "</td> \
 			    				    <td> \
 			    					<div class=\"ui icon buttons\"> \
 				    					<button class=\"ui blue icon button\" data-tooltip=\"Modifier\" onClick=\"DoleticUIModule.editContact(" + data.object[i].id + "); return false;\"> \
@@ -800,7 +1000,7 @@ var DoleticUIModule = new function () {
                         <button class=\"ui yellow icon button\" data-tooltip=\"Marquer comme client\" onClick=\"DoleticUIModule.tagClient(" + data.object[i].id + ");\"> \
                               <i class=\"suitcase icon\"></i> \
                         </button> \
-									</div> \
+                        </div> \
 			    				</td> \
 			    				</tr>";
                     counter++;
@@ -893,7 +1093,7 @@ var DoleticUIModule = new function () {
                         "<button class=\"ui yellow icon button\" data-tooltip=\"Marquer comme ancien\" onClick=\"DoleticUIModule.tagOld(" + data.object[i].id + ");\"> \
                               <i class=\"student icon\"></i> \
                         </button> \
-									</div> \
+                        </div> \
 			    				</td> \
 			    				</tr>";
                     counter++;
@@ -981,7 +1181,7 @@ var DoleticUIModule = new function () {
                         "<button class=\"ui yellow icon button\" data-tooltip=\"Demander une prospection\" onClick=\"DoleticUIModule.unachieveProspect(" + data.object[i].id + ");\"> \
                               <i class=\"reply icon\"></i> \
                         </button> \
-									</div> \
+                        </div> \
 			    				</td> \
 			    				</tr>";
                     counter++;
@@ -1097,6 +1297,16 @@ var DoleticUIModule = new function () {
             DoleticMasterInterface.hideConfirmModal);
     };
 
+    this.showNewCallForm = function (contactId) {
+        DoleticUIModule.clearNewCallForm(contactId);
+        $('#call_form_modal').modal('show');
+    };
+
+    this.cancelNewCallForm = function (contactId) {
+        DoleticUIModule.clearNewCallForm(contactId);
+        $('#call_form_modal').modal('hide');
+    };
+
     this.showNewFirmForm = function () {
         DoleticUIModule.clearNewFirmForm();
         $('#company_form_modal').modal('show');
@@ -1176,6 +1386,32 @@ var DoleticUIModule = new function () {
         }
     };
 
+    this.addCallHandler = function (data, contactId) {
+        // if no service error
+        if (data.code == 0) {
+            // clear firm form
+            DoleticUIModule.cancelNewCallForm();
+            DoleticMasterInterface.showSuccess("Ajout réussi !", "La prise de contact a été ajoutée avec succès !");
+            DoleticUIModule.fillCallList(contactId);
+        } else {
+            // use default service service error handler
+            DoleticServicesInterface.handleServiceError(data);
+        }
+    };
+
+    this.editCallHandler = function (data, contactId) {
+        // if no service error
+        if (data.code == 0) {
+            // clear firm form
+            DoleticUIModule.cancelNewCallForm();
+            DoleticMasterInterface.showSuccess("Ajout réussi !", "La prise de contact a été modifiée avec succès !");
+            DoleticUIModule.fillCallList(contactId);
+        } else {
+            // use default service service error handler
+            DoleticServicesInterface.handleServiceError(data);
+        }
+    };
+
     this.checkNewContactForm = function () {
         $('#contact_form .message').remove();
         $('#contact_form .field').removeClass('error');
@@ -1224,7 +1460,6 @@ var DoleticUIModule = new function () {
     };
 
     this.checkNewFirmForm = function () {
-        console.log($('#company_form'));
         $('#company_form .message').remove();
         $('#company_form .field').removeClass('error');
         var valid = true;
@@ -1255,6 +1490,25 @@ var DoleticUIModule = new function () {
         if (!valid) {
             $('#company_form').transition('shake');
             DoleticMasterInterface.showFormError("Erreur !", "Merci de corriger les champs affichés en rouge.", '#company_form');
+        }
+        return valid;
+    };
+
+    this.checkNewCallForm = function () {
+        $('#call_form .message').remove();
+        $('#call_form .field').removeClass('error');
+        var valid = true;
+        if (!DoleticMasterInterface.checkDate($('#call_date').val())) {
+            valid = false;
+            $('#call_date_field').addClass('error');
+        }
+        if ($('#call_type_search').dropdown('get value') == "") {
+            $('#call_type_field').addClass("error");
+            valid = false;
+        }
+        if ($('#call_author_search').dropdown('get value') == "") {
+            $('#call_author_field').addClass("error");
+            valid = false;
         }
         return valid;
     };

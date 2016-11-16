@@ -78,6 +78,7 @@ var ContactServicesInterface = new function () {
         ACTION: {
             GET_CONTACT_BY_ID: 'byid',
             GET_CONTACTS_BY_CATEGORY: 'bycategory',
+            GET_CURRENT_USER_CONTACTS: 'curcont',
             GET_ALL_CONTACTS: 'all',
             GET_ALL_CONTACT_TYPES: 'alltypes',
             INSERT: 'insert',
@@ -89,6 +90,10 @@ var ContactServicesInterface = new function () {
 
     this.getAll = function (successHandler) {
         return DoleticServicesInterface.callService(this.meta.OBJECT, this.meta.ACTION.GET_ALL_CONTACTS, {}, successHandler);
+    };
+
+    this.getCurrent = function (successHandler) {
+        return DoleticServicesInterface.callService(this.meta.OBJECT, this.meta.ACTION.GET_CURRENT_USER_CONTACTS, {}, successHandler);
     };
 
     this.getAllContactTypes = function (successHandler) {

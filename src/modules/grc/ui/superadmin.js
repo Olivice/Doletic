@@ -43,12 +43,11 @@ var DoleticUIModule = new function () {
                         DoleticUIModule.fillProspectList();
                         DoleticUIModule.fillAchievedProspectList();
                         DoleticUIModule.fillOldContactList();
+                        window.postLoad();
                     });
                 });
             });
         });
-
-        window.postLoad();
     };
     /**
      *    Override build function
@@ -117,7 +116,6 @@ var DoleticUIModule = new function () {
      *    Load the HTML code of the Contacts Tab
      */
     this.getContactsTab = function (callbackFct) {
-        //$('#contact_form_modal').remove();
         $('#contactsTab').load("../modules/grc/ui/templates/contactsTab.html", function () {
             $('#toggle_old_contacts').change(function () {
                 DoleticUIModule.fillContactList();
@@ -160,7 +158,6 @@ var DoleticUIModule = new function () {
      *    Load the HTML code of the Propects Tab
      */
     this.getAchievedProspectsTab = function (callbackFct) {
-        //$('#prospects_form_modal').remove();
         $('#achievedProspectsTab').load("../modules/grc/ui/templates/achievedProspectsTab.html", function () {
             if (callbackFct) {
                 callbackFct();

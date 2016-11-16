@@ -19,6 +19,7 @@ var DoleticUIModule = new function () {
         });
         DoleticUIModule.fillUserData();
         DoleticUIModule.fillUserProjects();
+        DoleticUIModule.fillUserContacts();
         DoleticUIModule.refreshAvatar();
         window.postLoad();
     };
@@ -211,6 +212,49 @@ var DoleticUIModule = new function () {
                         DoleticServicesInterface.handleServiceError(data);
                     }
                 });
+            } else {
+                // use doletic services interface to display error
+                DoleticServicesInterface.handleServiceError(data);
+            }
+        });
+    };
+
+    this.fillUserContacts = function () {
+        ContactServicesInterface.getCurrent(function (data) {
+            if (data.code == 0) {
+                var filters = [
+                    DoleticMasterInterface.no_filter,
+                    DoleticMasterInterface.input_filter,
+                    DoleticMasterInterface.select_filter
+                ];
+                var content = '<table class="ui very basic celled table" id="contact_table">' +
+                    '<thead>' +
+                    '<tr>' +
+                    '<th></th>' +
+                    '<th>Nom</th>' +
+                    '<th>Statut</th>' +
+                    '</tr>' +
+                    '</thead>' +
+                    '<tfoot>' +
+                    '<tr>' +
+                    '<th></th>' +
+                    '<th>Nom</th>' +
+                    '<th>Statut</th>' +
+                    '</tr>' +
+                    '</tfoot>' +
+                    '<tbody id="contact_body">';
+                var click = $('#submenu_grc').attr('onclick');
+                for (var i = 0; i < data.object.length; i++) {
+                    var onClick = click.substr(0, click.length-2) + ", 'DoleticUIModule.openContactInfo(" + data.object[i].id + ");');";
+                    content += '<tr>' +
+                        "<td><button onClick=\"" + onClick + "\" class=\"ui teal icon button\" data-tooltip=\"Détails du contact\"><i class=\"user icon\"></i></button></td>" +
+                        '<td>' + data.object[i].firstname + ' ' + data.object[i].name + '</td>' +
+                        '<td>' + data.object[i].category + '</td>' +
+                        '</tr>';
+                }
+                content += '</tbody></table>';
+                $('#contact_table_container').html(content);
+                DoleticMasterInterface.makeDataTables('contact_table', filters);
             } else {
                 // use doletic services interface to display error
                 DoleticServicesInterface.handleServiceError(data);

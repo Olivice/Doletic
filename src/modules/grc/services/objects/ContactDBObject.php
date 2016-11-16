@@ -282,6 +282,7 @@ class ContactServices extends AbstractObjectServices
     // --- actions
     const GET_CONTACT_BY_ID = "byid";
     const GET_CONTACTS_BY_CATEGORY = "bycategory";
+    const GET_CURRENT_USER_CONTACTS = "curcont";
     const GET_ALL_CONTACTS = "all";
     const GET_ALL_CONTACT_TYPES = "alltypes";
     const INSERT = "insert";
@@ -306,6 +307,8 @@ class ContactServices extends AbstractObjectServices
             $data = $this->__get_contact_by_id($params[ContactServices::PARAM_ID]);
         } else if (!strcmp($action, ContactServices::GET_CONTACTS_BY_CATEGORY)) {
             $data = $this->__get_contacts_by_category($params[ContactServices::PARAM_CATEGORY]);
+        } else if (!strcmp($action, ContactServices::GET_CURRENT_USER_CONTACTS)) {
+            $data = $this->__get_current_user_contacts();
         } else if (!strcmp($action, ContactServices::GET_ALL_CONTACTS)) {
             $data = $this->__get_all_contacts();
         } else if (!strcmp($action, ContactServices::GET_ALL_CONTACT_TYPES)) {
@@ -427,6 +430,49 @@ class ContactServices extends AbstractObjectServices
         $sql = parent::getDBObject()->GetTable(ContactDBObject::TABL_CONTACT)->GetSELECTQuery(
             array(DBTable::SELECT_ALL),
             array(ContactDBObject::COL_CATEGORY),
+            array(),
+            array(ContactDBObject::COL_CREATION_DATE => DBTable::ORDER_DESC)
+        );
+        // execute SQery and sresult
+        $pdos = parent::getDBConnection()->ResultFromQuery($sql, $sql_params);
+        // create contact
+        $contacts = array();
+        if (isset($pdos)) {
+            while (($row = $pdos->fetch()) !== false) {
+                array_push($contacts, new Contact(
+                    $row[ContactDBObject::COL_ID],
+                    $row[ContactDBObject::COL_GENDER],
+                    $row[ContactDBObject::COL_FIRSTNAME],
+                    $row[ContactDBObject::COL_LASTNAME],
+                    $row[ContactDBObject::COL_FIRM_ID],
+                    $row[ContactDBObject::COL_EMAIL],
+                    $row[ContactDBObject::COL_PHONE],
+                    $row[ContactDBObject::COL_CELLPHONE],
+                    $row[ContactDBObject::COL_CATEGORY],
+                    $row[ContactDBObject::COL_ROLE],
+                    $row[ContactDBObject::COL_NOTES],
+                    $row[ContactDBObject::COL_ORIGIN],
+                    $row[ContactDBObject::COL_ERROR_FLAG],
+                    $row[ContactDBObject::COL_NEXT_CALL_DATE],
+                    $row[ContactDBObject::COL_PROSPECTED],
+                    $row[ContactDBObject::COL_ASSIGNED_TO],
+                    $row[ContactDBObject::COL_CREATION_DATE],
+                    $row[ContactDBObject::COL_CREATED_BY],
+                    $row[ContactDBObject::COL_LAST_UPDATE]
+                ));
+            }
+        }
+        return $contacts;
+    }
+
+    private function __get_current_user_contacts()
+    {
+        // create sql params array
+        $sql_params = array(":" . ContactDBObject::COL_ASSIGNED_TO => $this->getCurrentUser()->getId());
+        // create sql request
+        $sql = parent::getDBObject()->GetTable(ContactDBObject::TABL_CONTACT)->GetSELECTQuery(
+            array(DBTable::SELECT_ALL),
+            array(ContactDBObject::COL_ASSIGNED_TO),
             array(),
             array(ContactDBObject::COL_CREATION_DATE => DBTable::ORDER_DESC)
         );
