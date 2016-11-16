@@ -76,7 +76,7 @@ class UaDBService extends AbstractDBService
         $project->setTasks(
             parent::getDBObjectResponseData(
                 TaskDBObject::OBJ_NAME,
-                TaskServices::GET_BY_PROJECT_WITH_DELIVERY,
+                TaskServices::GET_BY_PROJECT,
                 array(
                     TaskServices::PARAM_PROJECT_NUMBER => $number
                 )
