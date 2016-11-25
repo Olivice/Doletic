@@ -277,8 +277,10 @@ var DoleticUIModule = new function () {
     };
 
     this.cancelPassForm = function() {
+        $('#pass_form .field').removeClass("error");
         $('#oldpass, #newpass, #confirm').val('');
         $('#pass_form_modal').modal('hide');
+        $('#pass_form .message').remove();
     };
 
     this.updateProfile = function() {
@@ -337,6 +339,13 @@ var DoleticUIModule = new function () {
             $('#newpass_field').addClass("error");
             $('#confirm_field').addClass("error");
             valid = false;
+            DoleticMasterInterface.showFormError('Erreur !', 'Le mot de passe et la confirmation sont différents.', '#pass_form');
+            $('#pass_form').transition('shake');
+        }
+        if ($('#newpass').val().length < 9) {
+            $('#newpass_field').addClass("error");
+            valid = false;
+            DoleticMasterInterface.showFormError('Erreur !', 'Le mot de passe doit faire au moins 9 caractères.', '#pass_form');
             $('#pass_form').transition('shake');
         }
         return valid;
