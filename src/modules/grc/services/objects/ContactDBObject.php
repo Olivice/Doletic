@@ -593,7 +593,27 @@ class ContactServices extends AbstractObjectServices
             ":" . ContactDBObject::COL_LAST_UPDATE => date('Y-m-d H:i:s')
         );
         // create sql request
-        $sql = parent::getDBObject()->GetTable(ContactDBObject::TABL_CONTACT)->GetINSERTQuery();
+        $sql = parent::getDBObject()->GetTable(ContactDBObject::TABL_CONTACT)->GetINSERTQuery([
+            ContactDBObject::COL_ID,
+            ContactDBObject::COL_GENDER,
+            ContactDBObject::COL_FIRSTNAME,
+            ContactDBObject::COL_LASTNAME,
+            ContactDBObject::COL_FIRM_ID,
+            ContactDBObject::COL_EMAIL,
+            ContactDBObject::COL_PHONE,
+            ContactDBObject::COL_CELLPHONE,
+            ContactDBObject::COL_CATEGORY,
+            ContactDBObject::COL_ROLE,
+            ContactDBObject::COL_NOTES,
+            ContactDBObject::COL_ORIGIN,
+            ContactDBObject::COL_ERROR_FLAG,
+            ContactDBObject::COL_NEXT_CALL_DATE,
+            ContactDBObject::COL_PROSPECTED,
+            ContactDBObject::COL_ASSIGNED_TO,
+            ContactDBObject::COL_CREATION_DATE,
+            ContactDBObject::COL_CREATED_BY,
+            ContactDBObject::COL_LAST_UPDATE
+        ]);
         return parent::getDBConnection()->PrepareExecuteQuery($sql, $sql_params);
     }
 
