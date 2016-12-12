@@ -24,6 +24,7 @@ class DocumentDictionary
     const DOC_AVENANTRUPTURECC = 16;
     const DOC_AVENANTRUPTURERM = 17;
     const DOC_LETTREENVOIPV = 18;
+    const DOC_CAHIERRECETTE = 19;
     const DOC_LETTREENVOIDEVIS = "lettreenvoidevis";
 
 
@@ -91,6 +92,9 @@ class DocumentDictionary
                 break;
             case DocumentDictionary::DOC_AVENANTRUPTURERM:
                 $this->__make_avenantrupturerm_dict($params);
+                break;
+            case DocumentDictionary::DOC_CAHIERRECETTE:
+                $this->__make_cahierrecette_dict($params);
                 break;
         }
     }
@@ -605,6 +609,22 @@ class DocumentDictionary
             'VILLEINTERVENANT' => $int['int']->GetCity(), //Ville intervenant
             'SECUINTERVENANT' => isset($membership) ? $membership->GetSecuNumber() : 'NUMERO SECU', //n° sécu intervenant
             'NOMPRESIDENT' => isset($president) ? $president->GetFirstName() . ' ' . mb_strtoupper($president->GetLastname(), 'UTF-8') : 'NOM PRESIDENT', //Nom du président
+            'DJOUR' => date('d/m/Y'), //date actuelle au format 05/05/1994
+        ];
+    }
+
+    private function __make_cahierrecette_dict($params)
+    {
+        $project = $params[Services::PARAM_PROJECT];
+        $int = $params[Services::PARAM_INT];
+        $chadaff = $params[Services::PARAM_CHADAFF];
+
+        $this->dict = [
+            'TITREETUDE' => $project->GetNumber(),
+            'NOMUSER' => mb_strtoupper($chadaff->GetLastName(), 'UTF-8'), //Nom du chadaff
+            'PRENOMUSER' => $chadaff->GetFirstName(), //Prenom du chadaff
+            'NOMINTERVENANT' => mb_strtoupper($int['int']->GetLastName(), 'UTF-8'), //Nom de l'intervenant, à faire plusieurs fois si plusieurs intervenants
+            'PRENOMINTERVENANT' => $int['int']->GetFirstName(), //Prénom de l'intervenant
             'DJOUR' => date('d/m/Y'), //date actuelle au format 05/05/1994
         ];
     }
