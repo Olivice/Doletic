@@ -30,19 +30,19 @@
     <div class="ui segment">
         <form id="project_form" class="ui form vertical segment">
             <h4 class="ui dividing header">Ajout d'une sollicitation</h4>
-            <div id="name_field" class="sixteen wide required field">
+            <div id="project_name_field" class="sixteen wide required field">
                 <label>Nom</label>
-                <input id="name" placeholder="Nom..." type="text"/>
+                <input id="project_name" placeholder="Nom..." type="text"/>
             </div>
-            <div id="description_field" class="sixteen wide required field">
+            <div id="project_description_field" class="sixteen wide required field">
                 <label>Description</label>
-                <textarea id="description" placeholder="Description..."></textarea>
+                <textarea id="project_description" placeholder="Description..."></textarea>
             </div>
             <div class="fields">
-                <div class="twelve wide required field" id="origin_field">
+                <div class="twelve wide required field" id="project_origin_field">
                     <label>Origine de la sollicitation</label>
-                    <div id="origin_search" class="ui fluid search selection dropdown">
-                        <input type="hidden" id="origin"/>
+                    <div id="project_origin_search" class="ui fluid search selection dropdown">
+                        <input type="hidden" id="project_origin"/>
                         <i class="dropdown icon"></i>
                         <div class="default text">Origine...</div>
                         <div class="menu">
@@ -50,10 +50,10 @@
                         </div>
                     </div>
                 </div>
-                <div id="field_field" class="twelve wide required field">
+                <div id="project_field_field" class="twelve wide required field">
                     <label>Domaine principal</label>
-                    <div id="field_search" class="ui fluid search selection dropdown">
-                        <input type="hidden" id="field"/>
+                    <div id="project_field_search" class="ui fluid search selection dropdown">
+                        <input type="hidden" id="project_field"/>
                         <i class="dropdown icon"></i>
                         <div class="default text">Domaine...</div>
                         <div class="menu">
@@ -63,10 +63,10 @@
                 </div>
             </div>
             <div class="fields">
-                <div id="firm_field" class="eight wide required field">
+                <div id="project_firm_field" class="eight wide required field">
                     <label>Société</label>
-                    <div id="firm_search" class="ui fluid search selection dropdown">
-                        <input type="hidden" id="firm"/>
+                    <div id="project_firm_search" class="ui fluid search selection dropdown">
+                        <input type="hidden" id="project_firm"/>
                         <i class="dropdown icon"></i>
                         <div class="default text">Société...</div>
                         <div class="menu">
@@ -74,49 +74,49 @@
                         </div>
                     </div>
                 </div>
-                <div id="current_field" class="eight wide required field">
+                <div id="project_current_field" class="eight wide required field">
                     <div class="ui toggle checkbox">
-                        <input type="checkbox" id="current">
+                        <input type="checkbox" id="project_current">
                         <label>Je suis chargé d'affaires</label>
                     </div>
                 </div>
             </div>
             <div class="fields">
-                <div id="mgmt_field" class="eight wide required field">
+                <div id="project_mgmt_field" class="eight wide required field">
                     <label>Frais de gestion</label>
-                    <input id="mgmt" type="number"/>
+                    <input id="project_mgmt" type="number"/>
                 </div>
-                <div id="app_field" class="eight wide required field">
+                <div id="project_app_field" class="eight wide required field">
                     <label>Frais de dossier</label>
-                    <input id="app" type="number"/>
+                    <input id="project_app" type="number"/>
                 </div>
             </div>
             <div class="fields">
-                <div id="rebilled_field" class="eight wide required field">
+                <div id="project_rebilled_field" class="eight wide required field">
                     <label>Frais refacturés</label>
-                    <input id="rebilled" type="number"/>
+                    <input id="project_rebilled" type="number"/>
                 </div>
-                <div id="advance_field" class="eight wide required field">
+                <div id="project_advance_field" class="eight wide required field">
                     <label>Acompte</label>
-                    <input id="advance" type="number"/>
+                    <input id="project_advance" type="number"/>
                 </div>
             </div>
             <div class="fields">
-                <div id="secret_field" class="eight wide required field">
+                <div id="project_secret_field" class="eight wide required field">
                     <div class="ui toggle checkbox">
-                        <input type="checkbox" id="secret">
+                        <input type="checkbox" id="project_secret">
                         <label>Etude confidentielle</label>
                     </div>
                 </div>
-                <div id="critical_field" class="eight wide required field">
+                <div id="project_critical_field" class="eight wide required field">
                     <div class="ui toggle checkbox">
-                        <input type="checkbox" id="critical">
+                        <input type="checkbox" id="project_critical">
                         <label>Etude critique (risquée)</label>
                     </div>
                 </div>
             </div>
             <div class="ui hr_center small buttons">
-                <div id="abort_btn" class="ui button" onClick="DoleticUIModule.cancelNewProjectForm();">Annuler
+                <div id="project_abort_btn" class="ui button" onClick="DoleticUIModule.cancelNewProjectForm();">Annuler
                 </div>
                 <div class="or" data-text="ou"></div>
                 <div id="addproject_btn" class="ui green button" onClick="DoleticUIModule.insertNewProject();">

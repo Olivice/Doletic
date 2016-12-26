@@ -390,20 +390,97 @@ class FakeDataFunction extends AbstractFunction
                 FirmServices::PARAM_CITY => "Ville",
                 FirmServices::PARAM_COUNTRY => "France",
                 FirmServices::PARAM_TYPE => "SA",
-                FirmServices::PARAM_LAST_CONTACT => "2015-01-01"
+                FirmServices::PARAM_LAST_CONTACT => "2015-01-01",
+                FirmServices::PARAM_TYPE => "Start-up"
             ));
 
         // Example contact
         $kernel->GetDBObject(ContactDBObject::OBJ_NAME)->GetServices($kernel->GetCurrentUser())
-            ->GetResponseData(ContactServices::INSERT, array(
+            ->GetResponseData(ContactServices::FORCE_INSERT, array(
+                ContactServices::PARAM_ID => NULL,
                 ContactServices::PARAM_GENDER => "M.",
                 ContactServices::PARAM_FIRSTNAME => "Client",
                 ContactServices::PARAM_LASTNAME => "DOE",
                 ContactServices::PARAM_FIRM_ID => 1,
                 ContactServices::PARAM_EMAIL => "client.doe@gmail.com",
-                ContactServices::PARAM_PHONE => "0700000000",
+                ContactServices::PARAM_PHONE => "0100000000",
+                ContactServices::PARAM_CELLPHONE => "0700000000",
                 ContactServices::PARAM_CATEGORY => "Client",
-                ContactServices::PARAM_LAST_UPDATE => "2015-01-01"
+                ContactServices::PARAM_NOTES => "QQues notes",
+                ContactServices::PARAM_ORIGIN => "Obtenu via Kim",
+                ContactServices::PARAM_ROLE => "CEO",
+                ContactServices::PARAM_ERROR_FLAG => -1,
+                ContactServices::PARAM_NEXT_CALL_DATE => NULL,
+                ContactServices::PARAM_PROSPECTED => 0,
+                ContactServices::PARAM_LAST_UPDATE => "2015-01-01",
+                ContactServices::PARAM_CREATED_BY => 1,
+                ContactServices::PARAM_CREATION_DATE => "2015-01-01"
+            ));
+
+        $kernel->GetDBObject(ContactDBObject::OBJ_NAME)->GetServices($kernel->GetCurrentUser())
+            ->GetResponseData(ContactServices::FORCE_INSERT, array(
+                ContactServices::PARAM_ID => NULL,
+                ContactServices::PARAM_GENDER => "M.",
+                ContactServices::PARAM_FIRSTNAME => "Prospect",
+                ContactServices::PARAM_LASTNAME => "DOE",
+                ContactServices::PARAM_FIRM_ID => 1,
+                ContactServices::PARAM_EMAIL => "prospect.doe@gmail.com",
+                ContactServices::PARAM_PHONE => "0100000000",
+                ContactServices::PARAM_CELLPHONE => "0700000000",
+                ContactServices::PARAM_CATEGORY => "Prospect",
+                ContactServices::PARAM_NOTES => NULL,
+                ContactServices::PARAM_ORIGIN => NULL,
+                ContactServices::PARAM_ROLE => "CEO",
+                ContactServices::PARAM_ERROR_FLAG => -1,
+                ContactServices::PARAM_NEXT_CALL_DATE => NULL,
+                ContactServices::PARAM_PROSPECTED => 1,
+                ContactServices::PARAM_LAST_UPDATE => "2015-01-01",
+                ContactServices::PARAM_CREATED_BY => 1,
+                ContactServices::PARAM_CREATION_DATE => "2015-01-01"
+            ));
+
+        $kernel->GetDBObject(ContactDBObject::OBJ_NAME)->GetServices($kernel->GetCurrentUser())
+            ->GetResponseData(ContactServices::FORCE_INSERT, array(
+                ContactServices::PARAM_ID => NULL,
+                ContactServices::PARAM_GENDER => "M.",
+                ContactServices::PARAM_FIRSTNAME => "Called",
+                ContactServices::PARAM_LASTNAME => "DOE",
+                ContactServices::PARAM_FIRM_ID => 1,
+                ContactServices::PARAM_EMAIL => "called.doe@gmail.com",
+                ContactServices::PARAM_PHONE => "0100000000",
+                ContactServices::PARAM_CELLPHONE => "0700000000",
+                ContactServices::PARAM_CATEGORY => "Prospect appelé",
+                ContactServices::PARAM_NOTES => "Pas très gentil",
+                ContactServices::PARAM_ORIGIN => NULL,
+                ContactServices::PARAM_ROLE => "CEO",
+                ContactServices::PARAM_ERROR_FLAG => -1,
+                ContactServices::PARAM_NEXT_CALL_DATE => "2016-12-01",
+                ContactServices::PARAM_PROSPECTED => 1,
+                ContactServices::PARAM_LAST_UPDATE => "2015-01-01",
+                ContactServices::PARAM_CREATED_BY => 1,
+                ContactServices::PARAM_CREATION_DATE => "2015-01-01"
+            ));
+
+        $kernel->GetDBObject(ContactDBObject::OBJ_NAME)->GetServices($kernel->GetCurrentUser())
+            ->GetResponseData(ContactServices::FORCE_INSERT, array(
+                ContactServices::PARAM_ID => NULL,
+                ContactServices::PARAM_GENDER => "M.",
+                ContactServices::PARAM_FIRSTNAME => "Vieux",
+                ContactServices::PARAM_LASTNAME => "DOE",
+                ContactServices::PARAM_FIRM_ID => 1,
+                ContactServices::PARAM_EMAIL => "vieux.doe@gmail.com",
+                ContactServices::PARAM_PHONE => "0100000000",
+                ContactServices::PARAM_CELLPHONE => "0700000000",
+                ContactServices::PARAM_CATEGORY => "Ancien Client",
+                ContactServices::PARAM_NOTES => NULL,
+                ContactServices::PARAM_ORIGIN => NULL,
+                ContactServices::PARAM_ROLE => "CEO",
+                ContactServices::PARAM_ERROR_FLAG => -1,
+                ContactServices::PARAM_NEXT_CALL_DATE => NULL,
+                ContactServices::PARAM_PROSPECTED => 1,
+                ContactServices::PARAM_LAST_UPDATE => "2015-01-01",
+                ContactServices::PARAM_CREATED_BY => 1,
+                ContactServices::PARAM_CREATION_DATE => "2015-01-01"
             ));
         // --------------------------------------------------------------
         parent::endlog("done !");

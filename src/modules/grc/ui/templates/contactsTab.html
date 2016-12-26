@@ -2,7 +2,7 @@
     <div class="row">
         <div class="eleven wide column">
             <div class="ui buttons">
-                <div id="contact_modal_btn" class="ui green button" onClick="DoleticUIModule.showNewContactForm();">
+                <div id="contact_modal_btn" class="ui green button" onClick="DoleticUIModule.showNewContactForm(); $('#contact_type_search').dropdown('set selected', 'Client');">
                     Ajouter un contact
                 </div>
                 <div id="refresh_contact_btn" class="ui olive button" onClick="DoleticUIModule.fillContactList();">
@@ -31,20 +31,20 @@
     <form id="contact_form" class="ui form segment">
         <h4 class="ui dividing header">Ajout d'un contact</h4>
         <div class="fields">
-            <div id="firstname_field" class="eight wide required field">
+            <div id="contact_firstname_field" class="eight wide required field">
                 <label>Prénom</label>
-                <input id="firstname" placeholder="Prénom..." type="text"/>
+                <input id="contact_firstname" placeholder="Prénom..." type="text"/>
             </div>
-            <div id="lastname_field" class="eight wide required field">
+            <div id="contact_lastname_field" class="eight wide required field">
                 <label>Nom</label>
-                <input id="lastname" placeholder="Nom..." type="text"/>
+                <input id="contact_lastname" placeholder="Nom..." type="text"/>
             </div>
         </div>
         <div class="fields">
-            <div class="six wide required field" id="gender_field">
+            <div class="four wide required field" id="contact_gender_field">
                 <label>Civilité</label>
-                <div id="gender_search" class="ui fluid search selection dropdown">
-                    <input type="hidden" id="gender"/>
+                <div id="contact_gender_search" class="ui fluid search selection dropdown">
+                    <input type="hidden" id="contact_gender"/>
                     <i class="dropdown icon"></i>
                     <div class="default text">Civilité...</div>
                     <div class="menu">
@@ -52,7 +52,7 @@
                     </div>
                 </div>
             </div>
-            <div class="ten wide required field" id="contact_type_field">
+            <div class="four wide required field" id="contact_type_field">
                 <label>Type de contact</label>
                 <div id="contact_type_search" class="ui fluid search selection dropdown">
                     <input type="hidden" id="contact_type"/>
@@ -63,44 +63,84 @@
                     </div>
                 </div>
             </div>
+            <div id="contact_email_field" class="eight wide field">
+                <label>Mail</label>
+                <input id="contact_mail" placeholder="Mail..." type="text"/>
+            </div>
         </div>
         <div class="fields">
-            <div id="tel_field" class="eight wide field">
+            <div id="contact_tel_field" class="eight wide field">
                 <label>Téléphone</label>
-                <input id="tel" placeholder="0000000000" type="text"/>
+                <input id="contact_tel" placeholder="0000000000" type="text"/>
             </div>
-            <div id="cell_field" class="eight wide field">
+            <div id="contact_cell_field" class="eight wide field">
                 <label>Téléphone mobile</label>
-                <input id="cell" placeholder="0000000000" type="text"/>
+                <input id="contact_cell" placeholder="0000000000" type="text"/>
             </div>
         </div>
         <div class="fields">
-            <div class="eight wide required field" id="firm_field">
+            <div class="eight wide required field" id="contact_firm_field">
                 <label>Société</label>
-                <div id="firm_search" class="ui fluid search selection dropdown">
-                    <input type="hidden" id="firm"/>
+                <div id="contact_firm_search" class="ui fluid search selection dropdown">
+                    <input type="hidden" id="contact_firm"/>
                     <i class="dropdown icon"></i>
-                    <div class="default text">Type...</div>
+                    <div class="default text">Société...</div>
                     <div class="menu">
                         <!-- FIRMS WILL GO HERE -->
                     </div>
                 </div>
             </div>
-            <div id="role_field" class="eight wide required field">
+            <div id="contact_role_field" class="eight wide field">
                 <label>Poste</label>
-                <input id="role" placeholder="Role..." type="text"/>
+                <input id="contact_role" placeholder="Role..." type="text"/>
             </div>
         </div>
-        <div id="email_field" class="sixteen wide field">
-            <label>Mail</label>
-            <input id="mail" placeholder="Mail..." type="text"/>
+        <div id="contact_origin_field" class="sixteen wide field">
+            <label>Origine des coordonnées</label>
+            <input id="contact_origin" placeholder="Origine..." type="text"/>
         </div>
-        <div id="notes_field" class="sixteen wide field">
+        <div class="fields">
+            <div id="sdatei_field" class="eight wide field">
+                <label>Prochaine prospection</label>
+                <div class="ui calendar" id="contact_nextCallDate_field">
+                    <div class="ui input left icon">
+                        <i class="calendar icon"></i>
+                        <input id="sdatei_nextCalldate" placeholder="AAAA-mm-jj" type="text"/>
+                    </div>
+                </div>
+            </div>
+            <div class="eight wide required field" id="contact_prospected_field">
+                <div class="ui toggle checkbox">
+                    <input type="checkbox" id="contact_prospected">
+                    <label>Issu de la prospection</label>
+                </div>
+            </div>
+        </div>
+        <div class="fields">
+            <div class="eight wide required field" id="contact_user_field">
+                <label>Assigné à</label>
+                <div id="contact_user_search" class="ui fluid search selection dropdown">
+                    <input type="hidden" id="contact_user"/>
+                    <i class="dropdown icon"></i>
+                    <div class="default text">Prospecteur</div>
+                    <div class="menu">
+                        <!-- USERS WILL GO HERE -->
+                    </div>
+                </div>
+            </div>
+            <div class="eight wide required field" id="contact_error_field">
+                <div class="ui toggle checkbox">
+                    <input type="checkbox" id="contact_error">
+                    <label>Erreur dans les coordonnées</label>
+                </div>
+            </div>
+        </div>
+        <div id="contact_notes_field" class="sixteen wide field">
             <label>Notes</label>
-            <textarea id="notes" placeholder="Notes..."></textarea>
+            <textarea id="contact_notes" placeholder="Notes..."></textarea>
         </div>
         <div class="ui hr_center small buttons">
-            <div id="abort_btn" class="ui button" onClick="DoleticUIModule.clearNewContactForm();">Annuler</div>
+            <div id="contact_abort_btn" class="ui button" onClick="DoleticUIModule.clearNewContactForm();">Annuler</div>
             <div class="or" data-text="ou"></div>
             <div id="addcontact_btn" class="ui green button" onClick="DoleticUIModule.insertNewContact();">Ajouter
             </div>

@@ -8,12 +8,12 @@
                 </a>
             </div>
             <div class="content">
-                <a id="user_fulname" class="header">John Doe</a>
+                <a id="user_fulname" class="header">Chargement...</a>
                 <div class="meta">
                     <span class="date">Dernière connexion le <span
-                            id="lastco_timestamp">13-02-2015 à 12:00</span></span>
+                            id="lastco_timestamp">Chargement...</span></span>
                 </div>
-                <div id="user_position" class="description">Responsable DSI</div>
+                <div id="user_position" class="description">Chargement...</div>
             </div>
             <div class="extra content">
                 <a onclick="DoleticUIModule.showEditProfileForm();">
@@ -53,26 +53,31 @@
     </div>
     <div class="row" id="project_table_container">
     </div>
+    <div class="ui horizontal divider">
+        Mes contacts
+    </div>
+    <div class="row" id="contact_table_container">
+    </div>
 </div>
 <div class="ui modal" id="profile_form_modal">
     <div class="ui segment">
         <form id="profile_form" class="ui form">
             <h4 class="ui header" id="form_header">Edition du profil de </h4>
             <div class="fields">
-                <div id="firstname_field" class="eight wide required field">
+                <div id="profile_firstname_field" class="eight wide required field">
                     <label>Prénom</label>
-                    <input id="firstname" placeholder="Prénom..." type="text"/>
+                    <input id="profile_firstname" placeholder="Prénom..." type="text"/>
                 </div>
-                <div id="lastname_field" class="eight wide required field">
+                <div id="profile_lastname_field" class="eight wide required field">
                     <label>Nom</label>
-                    <input id="lastname" placeholder="Nom..." type="text"/>
+                    <input id="profile_lastname" placeholder="Nom..." type="text"/>
                 </div>
             </div>
             <div class="fields">
-                <div class="twelve wide required field" id="gender_field">
+                <div class="twelve wide required field" id="profile_gender_field">
                     <label>Civilité</label>
-                    <div id="gender_search" class="ui fluid search selection dropdown">
-                        <input type="hidden" id="gender"/>
+                    <div id="profile_gender_search" class="ui fluid search selection dropdown">
+                        <input type="hidden" id="profile_gender"/>
                         <i class="dropdown icon"></i>
                         <div class="default text">Civilité...</div>
                         <div class="menu">
@@ -80,44 +85,44 @@
                         </div>
                     </div>
                 </div>
-                <div id="birthdate_field" class="twelve wide required field">
+                <div id="profile_birthdate_field" class="twelve wide required field">
                     <label>Date de naissance</label>
-                    <div class="ui calendar" id="birthdate_calendar">
+                    <div class="ui calendar" id="profile_birthdate_calendar">
                         <div class="ui input left icon">
                             <i class="calendar icon"></i>
-                            <input id="birthdate" placeholder="AAA-mm-jj" type="text"/>
+                            <input id="profile_birthdate" placeholder="AAA-mm-jj" type="text"/>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="fields">
-                <div id="tel_field" class="twelve wide required field">
+                <div id="profile_tel_field" class="twelve wide required field">
                     <label>Numéro de téléphone</label>
-                    <input id="tel" placeholder="0000000000" type="text"/>
+                    <input id="profile_tel" placeholder="0000000000" type="text"/>
                 </div>
-                <div id="mail_field" class="twelve wide required field">
+                <div id="profile_mail_field" class="twelve wide required field">
                     <label>Adresse mail</label>
-                    <input id="mail" placeholder="exemple@domaine.com" type="text"/>
+                    <input id="profile_mail" placeholder="exemple@domaine.com" type="text"/>
                 </div>
             </div>
-            <div id="address_field" class="sixteen wide required field">
+            <div id="profile_address_field" class="sixteen wide required field">
                 <label>Adresse</label>
-                <input id="address" placeholder="X rue de ..." type="text"/>
+                <input id="profile_address" placeholder="X rue de ..." type="text"/>
             </div>
             <div class="fields">
-                <div id="postalcode_field" class="twelve wide required field">
+                <div id="profile_postalcode_field" class="twelve wide required field">
                     <label>Code postal</label>
-                    <input id="postalcode" placeholder="00000" type="text"/>
+                    <input id="profile_postalcode" placeholder="00000" type="text"/>
                 </div>
-                <div id="city_field" class="twelve wide required field">
+                <div id="profile_city_field" class="twelve wide required field">
                     <label>Ville</label>
-                    <input id="city" placeholder="Ville..." type="text"/>
+                    <input id="profile_city" placeholder="Ville..." type="text"/>
                 </div>
             </div>
-            <div class="sixteen wide required field" id="country_field">
+            <div class="sixteen wide required field" id="profile_country_field">
                 <label>Pays</label>
-                <div id="country_search" class="ui fluid search selection dropdown">
-                    <input type="hidden" id="country"/>
+                <div id="profile_country_search" class="ui fluid search selection dropdown">
+                    <input type="hidden" id="profile_country"/>
                     <i class="dropdown icon"></i>
                     <div class="default text">Pays...</div>
                     <div class="menu">
@@ -126,10 +131,10 @@
                 </div>
             </div>
             <div class="fields">
-                <div class="sixteen wide required field" id="schoolyear_field">
+                <div class="sixteen wide required field" id="profile_schoolyear_field">
                     <label>Année d'étude</label>
-                    <div id="schoolyear_search" class="ui fluid search selection dropdown">
-                        <input type="hidden" id="schoolyear"/>
+                    <div id="profile_schoolyear_search" class="ui fluid search selection dropdown">
+                        <input type="hidden" id="profile_schoolyear"/>
                         <i class="dropdown icon"></i>
                         <div class="default text">Année...</div>
                         <div class="menu">
@@ -137,10 +142,10 @@
                         </div>
                     </div>
                 </div>
-                <div class="sixteen wide required field" id="dept_field">
+                <div class="sixteen wide required field" id="profile_dept_field">
                     <label>Département</label>
-                    <div id="dept_search" class="ui fluid search selection dropdown">
-                        <input type="hidden" id="dept"/>
+                    <div id="profile_dept_search" class="ui fluid search selection dropdown">
+                        <input type="hidden" id="profile_dept"/>
                         <i class="dropdown icon"></i>
                         <div class="default text">Département...</div>
                         <div class="menu">
@@ -150,7 +155,7 @@
                 </div>
             </div>
             <div class="ui hr_center small buttons">
-                <div id="abort_btn" class="ui button" onClick="DoleticUIModule.cancelProfileForm();">Annuler
+                <div id="profile_abort_btn" class="ui button" onClick="DoleticUIModule.cancelProfileForm();">Annuler
                 </div>
                 <div class="or" data-text="ou"></div>
                 <div id="profile_btn" class="ui green button" onClick="DoleticUIModule.updateProfile();">

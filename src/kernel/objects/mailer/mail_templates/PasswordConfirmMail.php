@@ -27,6 +27,8 @@ class PasswordConfirmMail extends MailTemplate
             "\n" .
             "-{PASSWORD}-\n" .
             "\n" .
+            "Change-le sur Doletic pour mettre à jour celui de ton adresse mail.\n" .
+            "\n" .
             "À bientôt sur Doletic !\n",
             //__________________________________________________________________________________________________________________________________________
             // -- plain text body ----------------------------------------------------------------------------------------------------------------------
@@ -37,6 +39,8 @@ class PasswordConfirmMail extends MailTemplate
             "Ton nouveau mot de passe est :<br>" .
             "<br>" .
             "-{PASSWORD}-<br>" .
+            "<br>" .
+            "Change-le sur Doletic pour mettre à jour celui de ton adresse mail.<br>" .
             "<br>" .
             "À bientôt sur Doletic !<br>",
             //__________________________________________________________________________________________________________________________________________

@@ -77,16 +77,23 @@ var ContactServicesInterface = new function () {
         // --- (actions)
         ACTION: {
             GET_CONTACT_BY_ID: 'byid',
+            GET_CONTACTS_BY_CATEGORY: 'bycategory',
+            GET_CURRENT_USER_CONTACTS: 'curcont',
             GET_ALL_CONTACTS: 'all',
             GET_ALL_CONTACT_TYPES: 'alltypes',
             INSERT: 'insert',
             UPDATE: 'update',
-            DELETE: 'delete'
+            DELETE: 'delete',
+            UPDATE_CATEGORY: 'upcat'
         }
     };
 
     this.getAll = function (successHandler) {
         return DoleticServicesInterface.callService(this.meta.OBJECT, this.meta.ACTION.GET_ALL_CONTACTS, {}, successHandler);
+    };
+
+    this.getCurrent = function (successHandler) {
+        return DoleticServicesInterface.callService(this.meta.OBJECT, this.meta.ACTION.GET_CURRENT_USER_CONTACTS, {}, successHandler);
     };
 
     this.getAllContactTypes = function (successHandler) {
@@ -99,7 +106,16 @@ var ContactServicesInterface = new function () {
             {id: id},
             successHandler);
     };
-    this.insert = function (gender, firstname, lastname, firmId, email, phone, cellphone, category, role, notes, successHandler) {
+
+    this.getByCategory = function (category, successHandler) {
+        return DoleticServicesInterface.callService(
+            this.meta.OBJECT, this.meta.ACTION.GET_CONTACTS_BY_CATEGORY,
+            {category: category},
+            successHandler);
+    };
+
+    this.insert = function (gender, firstname, lastname, firmId, email, phone, cellphone, category, role, notes,
+                            origin, errorFlag, nextCallDate, prospected, assignedTo, successHandler) {
         return DoleticServicesInterface.callService(
             this.meta.OBJECT, this.meta.ACTION.INSERT,
             {
@@ -112,11 +128,18 @@ var ContactServicesInterface = new function () {
                 cellphone: cellphone,
                 category: category,
                 role: role,
-                notes: notes
+                notes: notes,
+                origin: origin,
+                errorFlag: errorFlag,
+                nextCallDate: nextCallDate,
+                prospected: prospected,
+                assignedTo: assignedTo
             },
             successHandler);
     };
-    this.update = function (id, gender, firstname, lastname, firmId, email, phone, cellphone, category, role, notes, successHandler) {
+
+    this.update = function (id, gender, firstname, lastname, firmId, email, phone, cellphone, category, role, notes,
+                            origin, errorFlag, prospected, assignedTo, successHandler) {
         return DoleticServicesInterface.callService(
             this.meta.OBJECT, this.meta.ACTION.UPDATE,
             {
@@ -130,10 +153,103 @@ var ContactServicesInterface = new function () {
                 cellphone: cellphone,
                 category: category,
                 role: role,
-                notes: notes
+                notes: notes,
+                origin: origin,
+                errorFlag: errorFlag,
+                nextCallDate: null,
+                prospected: prospected,
+                assignedTo: assignedTo
+
             },
             successHandler);
     };
+
+    this.updateCategory = function (id, category, successHandler) {
+        return DoleticServicesInterface.callService(
+            this.meta.OBJECT, this.meta.ACTION.UPDATE_CATEGORY,
+            {
+                id: id,
+                category: category
+            },
+            successHandler);
+    };
+
+    this.delete = function (id, successHandler) {
+        return DoleticServicesInterface.callService(
+            this.meta.OBJECT, this.meta.ACTION.DELETE,
+            {id: id},
+            successHandler);
+    }
+};
+
+var CallServicesInterface = new function () {
+
+    this.meta = {
+        // --- (object)
+        OBJECT: 'call',
+        // --- (actions)
+        ACTION: {
+            GET_CALL_BY_ID: 'byid',
+            GET_ALL_CALLS: 'all',
+            GET_CALLS_BY_CONTACT: 'bycont',
+            GET_ALL_CALL_TYPES: 'alltypes',
+            INSERT: 'insert',
+            UPDATE: 'update',
+            DELETE: 'delete'
+        }
+    };
+
+    this.getAll = function (successHandler) {
+        return DoleticServicesInterface.callService(this.meta.OBJECT, this.meta.ACTION.GET_ALL_CALLS, {}, successHandler);
+    };
+
+    this.getAllCallTypes = function (successHandler) {
+        return DoleticServicesInterface.callService(this.meta.OBJECT, this.meta.ACTION.GET_ALL_CALL_TYPES, {}, successHandler);
+    };
+
+    this.getById = function (id, successHandler) {
+        return DoleticServicesInterface.callService(
+            this.meta.OBJECT, this.meta.ACTION.GET_CALL_BY_ID,
+            {id: id},
+            successHandler);
+    };
+
+    this.getByContact = function (contactId, successHandler) {
+        return DoleticServicesInterface.callService(
+            this.meta.OBJECT, this.meta.ACTION.GET_CALLS_BY_CONTACT,
+            {contactId: contactId},
+            successHandler);
+    };
+
+    this.insert = function (contactId, callDate, category, author, notes, replied, successHandler) {
+        return DoleticServicesInterface.callService(
+            this.meta.OBJECT, this.meta.ACTION.INSERT,
+            {
+                contactId: contactId,
+                callDate: callDate,
+                category: category,
+                author: author,
+                notes: notes,
+                replied: replied
+            },
+            successHandler);
+    };
+
+    this.update = function (id, callDate, category, author, notes, replied, successHandler) {
+        return DoleticServicesInterface.callService(
+            this.meta.OBJECT, this.meta.ACTION.UPDATE,
+            {
+                id: id,
+                callDate: callDate,
+                category: category,
+                author: author,
+                notes: notes,
+                replied: replied
+
+            },
+            successHandler);
+    };
+
     this.delete = function (id, successHandler) {
         return DoleticServicesInterface.callService(
             this.meta.OBJECT, this.meta.ACTION.DELETE,

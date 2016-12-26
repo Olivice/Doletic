@@ -1,0 +1,187 @@
+<div class="ui grid container">
+    <div class="row">
+        <div class="sixteen wide column">
+            <div class="ui buttons">
+                <div id="editcontact_modal_btn" class="ui green button" onClick="DoleticUIModule.editContact(-1);">
+                    Modifier le contact
+                </div>
+                <div id="deletecontact_btn" class="ui red button" onClick="DoleticUIModule.deleteContact(-1);">
+                    Supprimer le contact
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="four wide column">
+            <div class="ui horizontal divider">
+                Profil du Client
+            </div>
+            <div class="ui relaxed divided list">
+                <div class="item">
+                    <div class="content">
+                        <div class="header">Nom complet</div>
+                        <div class="description" id="det_cont_name">undefined</div>
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="content">
+                        <div class="header">Email</div>
+                        <div class="description" id="det_cont_email">undefined</div>
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="content">
+                        <div class="header">Téléphone</div>
+                        <div class="description" id="det_cont_phone">undefined</div>
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="content">
+                        <div class="header">Téléphone mobile</div>
+                        <div class="description" id="det_cont_cellphone">undefined</div>
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="content">
+                        <div class="header">Entreprise</div>
+                        <div class="description" id="det_cont_firm">undefined</div>
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="content">
+                        <div class="header">Poste</div>
+                        <div class="description" id="det_cont_role">undefined</div>
+                    </div>
+                </div>
+            </div>
+            <div class="ui horizontal divider">
+                Infos de Gestion
+            </div>
+            <div class="ui relaxed divided list">
+                <div class="item">
+                    <div class="content">
+                        <div class="header">Origine des coordonnées</div>
+                        <div class="description" id="det_cont_origin">undefined</div>
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="content">
+                        <div class="header">Notes complémentaires</div>
+                        <div class="description" id="det_cont_notes">undefined</div>
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="content">
+                        <div class="header">Issu de la prospection ?</div>
+                        <div class="description" id="det_cont_prospected">undefined</div>
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="content">
+                        <div class="header">Etat des coordonnées</div>
+                        <div class="description" id="det_cont_error">undefined</div>
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="content">
+                        <div class="header">Prochaine prospection</div>
+                        <div class="description" id="det_cont_next_call_date">undefined</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="twelve wide column">
+            <div class="row">
+                <div class="ui horizontal divider">
+                    Historique des prises de contact
+                </div>
+                <div class="sixteen wide column" id="call_table_container">
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="center aligned five wide column"></div>
+                <div class="center aligned six wide column">
+                    <div id="addcall_modal_btn" class="ui green fluid button"
+                         onClick="DoleticUIModule.showNewCallForm(-1);">
+                        Ajouter une prise de contact
+                    </div>
+                </div>
+                <div class="center aligned five wide column"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="ui modal" id="call_form_modal">
+    <form id="call_form" class="ui form segment">
+        <h4 class="ui dividing header">Ajout d'une prise de contact</h4>
+        <div class="fields">
+            <div id="call_date_field" class="sixteen wide required field">
+                <label>Date de contact</label>
+                <div class="ui calendar" id="call_date_calendar">
+                    <div class="ui input left icon">
+                        <i class="calendar icon"></i>
+                        <input id="call_date" placeholder="AAAA-mm-jj" type="text"/>
+                    </div>
+                </div>
+            </div>
+            <div class="eight wide required field" id="call_author_field">
+                <label>Auteur</label>
+                <div id="call_author_search" class="ui fluid search selection dropdown">
+                    <input type="hidden" id="call_author"/>
+                    <i class="dropdown icon"></i>
+                    <div class="default text">Auteur...</div>
+                    <div class="menu">
+                        <!-- AUTHORS WILL GO HERE -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="fields">
+            <div class="eight wide required field" id="call_type_field">
+                <label>Type de contact</label>
+                <div id="call_type_search" class="ui fluid search selection dropdown">
+                    <input type="hidden" id="call_type_user"/>
+                    <i class="dropdown icon"></i>
+                    <div class="default text">Type...</div>
+                    <div class="menu">
+                        <!-- TYPES WILL GO HERE -->
+                    </div>
+                </div>
+            </div>
+            <div class="eight wide required field" id="call_replied_field">
+                <div class="ui toggle checkbox">
+                    <input type="checkbox" id="call_replied">
+                    <label>Réponse reçue ?</label>
+                </div>
+            </div>
+        </div>
+        <div id="call_notes_field" class="sixteen wide field">
+            <label>Notes</label>
+            <textarea id="call_notes" placeholder="Notes..."></textarea>
+        </div>
+        <div class="ui hr_center small buttons">
+            <div id="call_abort_btn" class="ui button" onClick="DoleticUIModule.clearNewCallForm(-1);">Annuler</div>
+            <div class="or" data-text="ou"></div>
+            <div id="addcall_btn" class="ui green button" onClick="DoleticUIModule.insertNewCall(-1);">Ajouter
+            </div>
+        </div>
+    </form>
+</div>
+<div class="ui basic modal" id="content_modal">
+    <div class="header">Notes de l'appel</div>
+    <div class="image content">
+        <div class="image"><i class="line chart icon"></i></div>
+        <div class="description">
+            <p id="content_modal_text"></p>
+        </div>
+    </div>
+    <div class="actions">
+        <div class="one fluid ui inverted buttons">
+            <div class="ui green basic inverted button" onclick="DoleticUIModule.hideContentModal();"><i
+                    class="checkmark icon"></i>
+                Ok
+            </div>
+        </div>
+    </div>
+</div>

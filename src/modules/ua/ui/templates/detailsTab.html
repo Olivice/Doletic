@@ -6,7 +6,7 @@
                     Modifier l'étude
                 </div>
                 <div id="disableproject_btn" class="ui orange button" onClick="DoleticUIModule.disableProject(-1);">
-                    Désactiver l'étude
+                    Mettre l'étude en Stand-By
                 </div>
             </div>
         </div>
@@ -18,12 +18,6 @@
                     <div class="content">
                         <div class="header">Intitulé</div>
                         <div class="description" id="det_name">undefined</div>
-                    </div>
-                </div>
-                <div class="item">
-                    <div class="content">
-                        <div class="header">Description</div>
-                        <div class="description" id="det_description">undefined</div>
                     </div>
                 </div>
                 <div class="item">
@@ -86,19 +80,15 @@
                         <div class="description" id="det_end">undefined</div>
                     </div>
                 </div>
-                <div class="item">
-                    <div id="addamend_modal_btn" class="ui green icon button"
-                         onClick="DoleticUIModule.showNewAmendmentForm(-1);">Nouvel avenant
-                    </div>
-                </div>
-                <div class="item">
-                    <div id="addtask_modal_btn" class="ui green icon button"
-                         onClick="DoleticUIModule.showNewTaskForm(-1);">Nouvelle phase
-                    </div>
-                </div>
             </div>
         </div>
         <div class="twelve wide column">
+            <div class="ui horizontal divider">
+                Description
+            </div>
+            <div class="row">
+                <div class="description" id="det_description">undefined</div>
+            </div>
             <div class="ui horizontal divider">
                 Contacts entreprise
             </div>
@@ -352,6 +342,15 @@
         </div>
     </div>
     <div class="row">
+        <div class="center aligned five wide column"></div>
+        <div class="center aligned six wide column">
+            <div id="addtask_modal_btn" class="ui green fluid button"
+                 onClick="DoleticUIModule.showNewTaskForm(-1);">Nouvelle phase
+            </div>
+        </div>
+        <div class="center aligned five wide column"></div>
+    </div>
+    <div class="row">
         <div class="ui horizontal divider">
             Avenants de l'étude
         </div>
@@ -381,6 +380,15 @@
                 </tbody>
             </table>
         </div>
+    </div>
+    <div class="row">
+        <div class="center aligned five wide column"></div>
+        <div class="center aligned six wide column">
+            <div id="addamend_modal_btn" class="ui green fluid button"
+                 onClick="DoleticUIModule.showNewAmendmentForm(-1);">Nouvel avenant
+            </div>
+        </div>
+        <div class="center aligned five wide column"></div>
     </div>
     <div class="row">
         <div class="ui horizontal divider">
@@ -454,7 +462,7 @@
                 </tr>
                 </thead>
                 <tbody id="project_docs_body">
-                    <!-- DOCUMENTS WILL GO HERE -->
+                <!-- DOCUMENTS WILL GO HERE -->
                 </tbody>
             </table>
         </div>

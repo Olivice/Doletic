@@ -202,7 +202,7 @@ var DoleticUIModule = new function () {
                     window.firm_list[data.object[i].id] = data.object[i];
                     content += '<div class="item" data-value="' + data.object[i].id + '">' + data.object[i].name + '</div>';
                 }
-                $('#firm_search .menu').html(content);
+                $('#project_firm_search .menu').html(content);
                 // Execute callback
                 if (callback != 0) {
                     callback();
@@ -239,7 +239,7 @@ var DoleticUIModule = new function () {
                     content += '<div class="item" data-value="' + data.object[i].label + '">' + data.object[i].label + '</div>';
                 }
                 // insert html content
-                $('#field_search .menu').html(content).dropdown();
+                $('#project_field_search .menu').html(content).dropdown();
             } else {
                 // use default service service error handler
                 DoleticServicesInterface.handleServiceError(data);
@@ -278,7 +278,7 @@ var DoleticUIModule = new function () {
                     content += '<div class="item" data-value="' + data.object[i] + '">' + data.object[i] + '</div>';
                 }
                 // insert html content
-                $('#origin_search .menu').html(content);
+                $('#project_origin_search .menu').html(content);
             } else {
                 // use default service service error handler
                 DoleticServicesInterface.handleServiceError(data);
@@ -560,8 +560,10 @@ var DoleticUIModule = new function () {
             if (data.code == 0 && data.object != "[]") {
                 var content = "";
                 var search_content = "";
+                var defaultValue = 0;
                 for (var i = 0; i < data.object.length; i++) {
                     var contact = window.contact_list[data.object[i].contact_id];
+                    defaultValue = (i == 0 ? contact.id : defaultValue);
                     search_content += '<div class="item" data-value="' + contact.id + '">'
                         + contact.firstname + ' ' + contact.lastname + '</div>';
                     content += '<tr><td>' + contact.firstname + ' ' + contact.lastname + '</td>' +
@@ -572,7 +574,13 @@ var DoleticUIModule = new function () {
                         '</button>' : '<i>Aucune</i>') + '</td></tr>';
                 }
                 $('#project_contacts_body').html(content);
-                $('#contact_search_doc .menu').html(search_content).dropdown();
+                $.when($('#contact_search_doc .menu').html(search_content)).then(function() {
+                    if (defaultValue != 0) {
+                        $('#contact_search_doc').dropdown('set selected', defaultValue);
+                    } else {
+                        $('#contact_search_doc').dropdown('restore defaults');
+                    }
+                });
             } else {
                 // use default service service error handler
                 DoleticServicesInterface.handleServiceError(data);
@@ -589,9 +597,11 @@ var DoleticUIModule = new function () {
             if (data.code == 0 && data.object != "[]") {
                 var content = "";
                 var search_content = "";
+                var defaultValue = "";
                 for (var i = 0; i < data.object.length; i++) {
                     var onClick = click + +data.object[i].int_id + ");');";
                     var int = window.user_list[data.object[i].int_id];
+                    defaultValue = (i == 0 ? int.id : defaultValue);
                     search_content += '<div class="item" data-value="' + int.id + '">'
                         + int.firstname + ' ' + int.lastname + '</div>';
                     content += '<tr><td><a href="#" onclick="' + onClick + '">' + int.firstname + ' ' + int.lastname + '</a></td>' +
@@ -604,7 +614,13 @@ var DoleticUIModule = new function () {
                         '</button>' : '<i>Aucune</i>') + '</td></tr>';
                 }
                 $('#project_ints_body').html(content);
-                $('#int_search_doc .menu').html(search_content).dropdown();
+                $.when($('#int_search_doc .menu').html(search_content)).then(function () {
+                    if (defaultValue != 0) {
+                        $('#int_search_doc').dropdown('set selected', defaultValue);
+                    } else {
+                        $('#int_search_doc').dropdown('restore defaults');
+                    }
+                });
             } else {
                 // use default service service error handler
                 DoleticServicesInterface.handleServiceError(data);
@@ -621,9 +637,11 @@ var DoleticUIModule = new function () {
             if (data.code == 0 && data.object != "[]") {
                 var content = "";
                 var search_content = "";
+                var defaultValue = 0;
                 for (var i = 0; i < data.object.length; i++) {
                     var onClick = click + data.object[i].chadaff_id + ");');";
                     var chadaff = window.user_list[data.object[i].chadaff_id];
+                    defaultValue = (i == 0 ? chadaff.id : defaultValue);
                     search_content += '<div class="item" data-value="' + chadaff.id + '">'
                         + chadaff.firstname + ' ' + chadaff.lastname + '</div>';
                     content += '<tr><td><a href="#" onclick="' + onClick + '">' + chadaff.firstname + ' ' + chadaff.lastname + '</a></td>' +
@@ -632,7 +650,13 @@ var DoleticUIModule = new function () {
                         '<td><i>Aucune</i></td></tr>';
                 }
                 $('#project_chadaffs_body').html(content);
-                $('#chadaff_search_doc .menu').html(search_content).dropdown();
+                $.when($('#chadaff_search_doc .menu').html(search_content)).then(function () {
+                    if (defaultValue != 0) {
+                        $('#chadaff_search_doc').dropdown('set selected', defaultValue);
+                    } else {
+                        $('#chadaff_search_doc').dropdown('restore defaults');
+                    }
+                });
             } else {
                 // use default service service error handler
                 DoleticServicesInterface.handleServiceError(data);
@@ -917,10 +941,10 @@ var DoleticUIModule = new function () {
         $('#project_form')[0].reset();
         $('#project_form h4').html("Ajout d'une sollicitation");
         $('#project_form .dropdown').dropdown('restore defaults');
-        $('#mgmt_field').parent().hide();
-        $('#rebilled_field').parent().hide();
-        $('#mgmt, #app, #rebilled, #advance').val('0');
-        $('#current_field').show();
+        $('#project_mgmt_field').parent().hide();
+        $('#project_rebilled_field').parent().hide();
+        $('#project_mgmt, #project_app, #project_rebilled, #project_advance').val('0');
+        $('#project_current_field').show();
         $('#addproject_btn').html("Ajouter").attr("onClick", "DoleticUIModule.insertNewProject(); return false;");
     };
 
@@ -966,17 +990,17 @@ var DoleticUIModule = new function () {
         if (DoleticUIModule.checkNewProjectForm()) {
             // Insert new project in db
             ProjectServicesInterface.insertOwn(
-                $('#name').val(),
-                $('#description').val(),
-                $('#origin_search').dropdown('get value'),
-                $('#field_search').dropdown('get value'),
-                $('#firm_search').dropdown('get value'),
-                $('#mgmt').val(),
-                $('#app').val(),
-                $('#rebilled').val(),
-                $('#advance').val(),
-                $('#secret').prop('checked') ? 1 : 0,
-                $('#critical').prop('checked') ? 1 : 0,
+                $('#project_name').val(),
+                $('#project_description').val(),
+                $('#project_origin_search').dropdown('get value'),
+                $('#project_field_search').dropdown('get value'),
+                $('#project_firm_search').dropdown('get value'),
+                $('#project_mgmt').val(),
+                $('#project_app').val(),
+                $('#project_rebilled').val(),
+                $('#project_advance').val(),
+                $('#project_secret').prop('checked') ? 1 : 0,
+                $('#project_critical').prop('checked') ? 1 : 0,
                 DoleticUIModule.addProjectHandler);
         } else {
 
@@ -1103,20 +1127,20 @@ var DoleticUIModule = new function () {
         ProjectServicesInterface.getByNumber(number, function (data) {
             // if no service error
             if (data.code == 0 && data.object != "[]") {
-                $('#name').val(data.object.name);
-                $('#description').val(data.object.description);
-                $('#origin_search').dropdown("set selected", data.object.origin);
-                $('#field_search').dropdown("set selected", data.object.field);
-                $('#firm_search').dropdown("set selected", data.object.firm_id);
-                $('#mgmt_field').parent().show();
-                $('#rebilled_field').parent().show();
-                $('#mgmt').val(data.object.mgmt_fee);
-                $('#app').val(data.object.app_fee);
-                $('#rebilled').val(data.object.rebilled_fee);
-                $('#advance').val(data.object.advance);
-                $('#secret').val(data.object.secret);
-                $('#critical').val(data.object.critical);
-                $('#current_field').hide();
+                $('#project_name').val(data.object.name);
+                $('#project_description').val(data.object.description);
+                $('#project_origin_search').dropdown("set selected", data.object.origin);
+                $('#project_field_search').dropdown("set selected", data.object.field);
+                $('#project_firm_search').dropdown("set selected", data.object.firm_id);
+                $('#project_mgmt_field').parent().show();
+                $('#project_rebilled_field').parent().show();
+                $('#project_mgmt').val(data.object.mgmt_fee);
+                $('#project_app').val(data.object.app_fee);
+                $('#project_rebilled').val(data.object.rebilled_fee);
+                $('#project_advance').val(data.object.advance);
+                $('#project_secret').val(data.object.secret);
+                $('#project_critical').val(data.object.critical);
+                $('#project_current_field').hide();
                 $('#addproject_btn').html("Confirmer");
                 $('#addproject_btn').attr("onClick", "DoleticUIModule.updateProject(" + number + "); return false;");
                 $('#project_form_modal').modal('show');
@@ -1242,17 +1266,17 @@ var DoleticUIModule = new function () {
             // Insert user data in db SELECT ?
             ProjectServicesInterface.updateOwnProject(
                 number,
-                $('#name').val(),
-                $('#description').val(),
-                $('#origin_search').dropdown('get value'),
-                $('#field_search').dropdown('get value'),
-                $('#firm_search').dropdown('get value'),
-                $('#mgmt').val(),
-                $('#app').val(),
-                $('#rebilled').val(),
-                $('#advance').val(),
-                $('#secret').prop('checked') ? 1 : 0,
-                $('#critical').prop('checked') ? 1 : 0,
+                $('#project_name').val(),
+                $('#project_description').val(),
+                $('#project_origin_search').dropdown('get value'),
+                $('#project_field_search').dropdown('get value'),
+                $('#project_firm_search').dropdown('get value'),
+                $('#project_mgmt').val(),
+                $('#project_app').val(),
+                $('#project_rebilled').val(),
+                $('#project_advance').val(),
+                $('#project_secret').prop('checked') ? 1 : 0,
+                $('#project_critical').prop('checked') ? 1 : 0,
                 function (data) {
                     DoleticUIModule.editProjectHandler(data, number);
                 }
@@ -1383,36 +1407,36 @@ var DoleticUIModule = new function () {
         $('#project_form .field').removeClass("error");
         var valid = true;
         var errorString = "";
-        if ($('#name').val().trim() == '') {
-            $('#name_field').addClass("error");
+        if ($('#project_name').val().trim() == '') {
+            $('#project_name_field').addClass("error");
             valid = false;
         }
-        if ($('#origin_search').dropdown('get value') == "") {
-            $('#origin_field').addClass("error");
+        if ($('#project_origin_search').dropdown('get value') == "") {
+            $('#project_origin_field').addClass("error");
             valid = false;
         }
-        if ($('#field_search').dropdown('get value') == "") {
-            $('#field_field').addClass("error");
+        if ($('#project_field_search').dropdown('get value') == "") {
+            $('#project_field_field').addClass("error");
             valid = false;
         }
-        if ($('#firm_search').dropdown('get value') == "") {
-            $('#firm_field').addClass("error");
+        if ($('#project_firm_search').dropdown('get value') == "") {
+            $('#project_firm_field').addClass("error");
             valid = false;
         }
-        if (!DoleticMasterInterface.checkInt($('#mgmt').val())) {
-            $('#mgmt_field').addClass("error");
+        if (!DoleticMasterInterface.checkInt($('#project_mgmt').val())) {
+            $('#project_mgmt_field').addClass("error");
             valid = false;
         }
-        if (!DoleticMasterInterface.checkInt($('#app').val())) {
-            $('#app_field').addClass("error");
+        if (!DoleticMasterInterface.checkInt($('#project_app').val())) {
+            $('#project_app_field').addClass("error");
             valid = false;
         }
-        if (!DoleticMasterInterface.checkInt($('#rebilled').val())) {
-            $('#rebilled_field').addClass("error");
+        if (!DoleticMasterInterface.checkInt($('#project_rebilled').val())) {
+            $('#project_rebilled_field').addClass("error");
             valid = false;
         }
-        if (!DoleticMasterInterface.checkInt($('#advance').val())) {
-            $('#advance_field').addClass("error");
+        if (!DoleticMasterInterface.checkInt($('#project_advance').val())) {
+            $('#project_advance_field').addClass("error");
             valid = false;
         }
         if (!valid) {

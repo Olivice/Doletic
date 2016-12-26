@@ -1137,7 +1137,11 @@ class ProjectServices extends AbstractObjectServices
         $sql_params = array(":" . ProjectDBObject::COL_AUDITOR_ID => $auditorId);
         // create sql request
         $sql = parent::getDBObject()->GetTable(ProjectDBObject::TABL_PROJECT)->GetSELECTQuery(
-            array(DBTable::SELECT_ALL), array(ProjectDBObject::COL_AUDITOR_ID));
+            array(DBTable::SELECT_ALL),
+            array(ProjectDBObject::COL_AUDITOR_ID),
+            array(),
+            array(ProjectDBObject::COL_NUMBER => DBTable::ORDER_DESC)
+        );
         // execute SQL query and save result
         $pdos = parent::getDBConnection()->ResultFromQuery($sql, $sql_params);
         // create udata var
@@ -1180,7 +1184,11 @@ class ProjectServices extends AbstractObjectServices
         $sql_params = array(":" . ProjectDBObject::COL_FIRM_ID => $firmId);
         // create sql request
         $sql = parent::getDBObject()->GetTable(ProjectDBObject::TABL_PROJECT)->GetSELECTQuery(
-            array(DBTable::SELECT_ALL), array(ProjectDBObject::COL_FIRM_ID));
+            array(DBTable::SELECT_ALL),
+            array(ProjectDBObject::COL_FIRM_ID),
+            array(),
+            array(ProjectDBObject::COL_NUMBER => DBTable::ORDER_DESC)
+        );
         // execute SQL query and save result
         $pdos = parent::getDBConnection()->ResultFromQuery($sql, $sql_params);
         // create udata var
@@ -1223,14 +1231,22 @@ class ProjectServices extends AbstractObjectServices
         $sql_params = array(":" . ProjectDBObject::COL_CHADAFF_ID => $chadaffId);
         // create sql request
         $sql1 = parent::getDBObject()->GetTable(ProjectDBObject::TABL_CHADAFF)->GetSELECTQuery(
-            array(DBTable::SELECT_ALL), array(ProjectDBObject::COL_CHADAFF_ID));
+            array(DBTable::SELECT_ALL),
+            array(ProjectDBObject::COL_CHADAFF_ID)
+        );
 
         $sql2 = parent::getDBObject()->GetTable(ProjectDBObject::TABL_PROJECT)->GetSELECTQuery();
 
         $sql = DBTable::GetJOINQuery(
             $sql1,
             $sql2,
-            [ProjectDBObject::COL_PROJECT_NUMBER, ProjectDBObject::COL_NUMBER]
+            [ProjectDBObject::COL_PROJECT_NUMBER, ProjectDBObject::COL_NUMBER],
+            DBTable::DT_INNER,
+            "",
+            false,
+            null,
+            array(),
+            array(ProjectDBObject::COL_NUMBER => DBTable::ORDER_DESC)
         );
 
         // execute SQL query and save result
@@ -1283,7 +1299,13 @@ class ProjectServices extends AbstractObjectServices
         $sql = DBTable::GetJOINQuery(
             $sql1,
             $sql2,
-            [ProjectDBObject::COL_PROJECT_NUMBER, ProjectDBObject::COL_NUMBER]
+            [ProjectDBObject::COL_PROJECT_NUMBER, ProjectDBObject::COL_NUMBER],
+            DBTable::DT_INNER,
+            "",
+            false,
+            null,
+            array(),
+            array(ProjectDBObject::COL_NUMBER => DBTable::ORDER_DESC)
         );
 
         // execute SQL query and save result
@@ -1336,7 +1358,13 @@ class ProjectServices extends AbstractObjectServices
         $sql = DBTable::GetJOINQuery(
             $sql1,
             $sql2,
-            [ProjectDBObject::COL_PROJECT_NUMBER, ProjectDBObject::COL_NUMBER]
+            [ProjectDBObject::COL_PROJECT_NUMBER, ProjectDBObject::COL_NUMBER],
+            DBTable::DT_INNER,
+            "",
+            false,
+            null,
+            array(),
+            array(ProjectDBObject::COL_NUMBER => DBTable::ORDER_DESC)
         );
 
         // execute SQL query and save result

@@ -489,6 +489,15 @@ var ProjectServicesInterface = new function () {
             successHandler);
     };
 
+    this.delete = function(number, successHandler) {
+        return DoleticServicesInterface.callService(
+            this.meta.OBJECT, this.meta.ACTION.DELETE,
+            {
+                number: number
+            },
+            successHandler);
+    };
+
     this.signProject = function (number, signDate, successHandler) {
         return DoleticServicesInterface.callService(
             this.meta.OBJECT, this.meta.ACTION.SIGN,

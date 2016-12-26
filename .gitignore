@@ -6,3 +6,6 @@ html/
 /src/kernel/results.json
 *.swp
 .idea/
+/migrate.zip
+/src/kernel/docoutput/
+/src/kernel/doctemplates/

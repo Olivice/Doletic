@@ -451,7 +451,7 @@ class Services
 
     private function __service_edit_document($template, $number, $mainContact, $mainChadaff, $mainInt)
     {
-        if ($this->isNullOrEmpty($mainContact) || $this->isNullOrEmpty($mainChadaff) || $this->isNullOrEmpty($mainInt)) {
+        if ($this->isNullOrEmpty($mainContact) || $this->isNullOrEmpty($mainChadaff) || ($this->isNullOrEmpty($mainInt) && $template > 2)) {
             return new ServiceResponse(
                 "Le chargé d'affaires, le contact ou le consultant sont manquants !",
                 ServiceResponse::ERR_MISSING_PARAMS,

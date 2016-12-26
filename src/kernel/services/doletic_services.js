@@ -304,7 +304,7 @@ var DoleticServicesInterface = new function () {
      */
     this.ajaxPOST = function (url, data, dataType, errorHandler, successHandler) {
         // DEBUG -------------------------------
-        console.debug("ajaxPOST called with url = " + url + "\ndata = \n" + JSON.stringify(data));
+        //console.debug("ajaxPOST called with url = " + url + "\ndata = \n" + JSON.stringify(data));
         // -------------------------------------
         $("body").css("cursor", "progress").fadeTo( "fast" , 0.7);
         this.activeAjax++;

@@ -33,13 +33,13 @@
     <form id="company_form" class="ui form segment">
         <h4 class="ui dividing header">Ajout d'une société</h4>
         <div class="ui fields">
-            <div id="siret_field" class="eight wide field">
+            <div id="firm_siret_field" class="eight wide field">
                 <label>SIRET</label>
-                <input id="siret" placeholder="SIRET..." type="text"/>
+                <input id="firm_siret" placeholder="SIRET..." type="text"/>
             </div>
-            <div id="name_field" class="eight wide required field">
+            <div id="firm_name_field" class="eight wide required field">
                 <label>Nom</label>
-                <input id="name" placeholder="Nom..." type="text"/>
+                <input id="firm_name" placeholder="Nom..." type="text"/>
             </div>
         </div>
         <div class="sixteen wide required field" id="firm_type_field">
@@ -54,23 +54,23 @@
             </div>
         </div>
         <div class="ui fields">
-            <div id="address_field" class="ten wide required field">
+            <div id="firm_address_field" class="ten wide required field">
                 <label>Adresse</label>
-                <input id="address" placeholder="Adresse..." type="text"/>
+                <input id="firm_address" placeholder="Adresse..." type="text"/>
             </div>
-            <div id="postalcode_field" class="six wide required field">
+            <div id="firm_postalcode_field" class="six wide required field">
                 <label>Code Postal</label>
-                <input id="postalcode" placeholder="Code Postal..." type="text"/>
+                <input id="firm_postalcode" placeholder="Code Postal..." type="text"/>
             </div>
         </div>
         <div class="ui fields">
-            <div id="city_field" class="eight wide required field">
+            <div id="firm_city_field" class="eight wide required field">
                 <label>Ville</label>
-                <input id="city" placeholder="Ville..." type="text"/>
+                <input id="firm_city" placeholder="Ville..." type="text"/>
             </div>
-            <div class="eight wide required field" id="country_field">
+            <div class="eight wide required field" id="firm_country_field">
                 <label>Pays</label>
-                <div id="country_search" class="ui fluid search selection dropdown">
+                <div id="firm_country_search" class="ui fluid search selection dropdown">
                     <input type="hidden" id="country"/>
                     <i class="dropdown icon"></i>
                     <div class="default text">Pays...</div>
@@ -81,7 +81,7 @@
             </div>
         </div>
         <div class="ui hr_center small buttons">
-            <div id="abort_btn" class="ui button" onClick="DoleticUIModule.clearNewFirmForm();">Annuler</div>
+            <div id="firm_abort_btn" class="ui button" onClick="DoleticUIModule.clearNewFirmForm();">Annuler</div>
             <div class="or" data-text="ou"></div>
             <div id="addfirm_btn" class="ui green button" onClick="DoleticUIModule.insertNewFirm();">Ajouter
             </div>

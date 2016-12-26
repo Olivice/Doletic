@@ -914,8 +914,6 @@ var DoleticUIModule = new function () {
         $('#user_form .message').remove();
         $('#user_form')[0].reset();
         $('#user_form h4').html("Ajout d'un membre");
-        $('#firstname').prop('readonly', false);
-        $('#lastname').prop('readonly', false);
         $('#old_position').addClass('disabled');
         $('#user_form .dropdown').dropdown('restore defaults');
 
@@ -1071,9 +1069,7 @@ var DoleticUIModule = new function () {
             if (data.code == 0 && data.object != "[]") {
                 $('#old_position').removeClass('disabled');
                 $('#firstname').val(data.object.firstname);
-                $('#firstname').prop('readonly', true);
                 $('#lastname').val(data.object.lastname);
-                $('#lastname').prop('readonly', true);
                 $('#birthdate').val(data.object.birthdate);
                 $('#city').val(data.object.city);
                 $('#address').val(data.object.address);
@@ -1552,7 +1548,7 @@ var DoleticUIModule = new function () {
             $('#sdatei_field').addClass("error");
             valid = false;
         }
-        if (!/^\d{15}$/.test($('#secu_int').val().trim())) {
+        if (!/^\d+$/.test($('#secu_int').val().trim())) {
             $('#secu_int').addClass("error");
             valid = false;
         }
